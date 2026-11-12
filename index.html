@@ -187,6 +187,7 @@ button { font: inherit; }
   font-size: 18px;
   color: var(--ink);
   overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 /* ---------- tube buttons ---------- */
@@ -372,7 +373,7 @@ button { font: inherit; }
       <a class="tube" id="go-lyft" href="https://ride.lyft.com/" target="_blank" rel="noopener">Lyft</a>
     </nav>
 
-    <p class="caveat">Unofficial and unreserved. Space isn’t guaranteed. <a href="#fine-print">Fine print</a></p>
+    <p class="caveat">Unofficial and unreserved. Space might be limited. <a href="#fine-print">Fine print</a></p>
 
     <div class="checkin">
       <button class="check" type="button" data-k="here" aria-pressed="false">
@@ -417,11 +418,10 @@ button { font: inherit; }
   <section id="fine-print" aria-labelledby="h-fine">
     <h2 class="hd" id="h-fine">Fine print</h2>
     <ul class="fine">
-      <li><b>Not official.</b> This isn’t a What’s Next event or part of the conference program. It’s attendees going out together.</li>
-      <li><b>Nothing is reserved.</b> We haven’t booked any venues. We show up like everyone else.</li>
-      <li><b>Space is limited.</b> Bars fill up and some will hit capacity. If you can’t get in, say so in the chat and we’ll sort out an overflow spot.</li>
-      <li><b>House rules apply.</b> Covers, lines and ID checks are up to each venue. 21+.</li>
-      <li><b>Your tab is yours.</b> Pay as you go and tip your bartenders.</li>
+      <li><b>This is not official programming.</b> This isn’t a What’s Next event or part of the conference program. I just wanted to get people together to hit the town after the happy hours ended, and apparently a LOT of you liked that idea.</li>
+      <li><b>Nothing is reserved.</b> I haven’t booked any venues. Every place I’m currently planning to hit can fit hundreds of people though, so things should be fine, but space might be limited. If you can’t get in, say so in the chat and we’ll sort out an overflow spot. Lots of great places in the area!</li>
+      <li><b>Your tab is yours.</b> Pay as you go and tip your bartenders!</li>
+      <li><b>DRINK LOTS OF WATER.</b></li>
       <li><b>Get home safe.</b> Rideshare, look out for each other, don’t drive.</li>
     </ul>
   </section>
@@ -462,7 +462,7 @@ button { font: inherit; }
 
   /* ---------------- live data: Google Sheet, fallback data.json ---------------- */
 
-  const DEFAULT = { stops: [{ time: '9:00 PM', venue: 'TBA', address: '', area: '', note: 'Starting spot drops soon.', status: 'next' }], hide: [] };
+  const DEFAULT = { stops: [{ time: '9:00 PM', venue: 'Larimer Beer Hall', address: '2012 Larimer St', area: 'Ballpark', note: 'Tentative starting spot. Confirming before 9.', status: 'next' }], hide: [] };
   let data = store.get('data', DEFAULT);
   let lastSync = 0;
   let lastNowKey = null;

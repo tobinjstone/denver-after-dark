@@ -1,6 +1,6 @@
 {
   "stops": [
-    { "time": "9:00 PM", "venue": "TBA", "address": "", "area": "", "note": "Starting spot drops soon.", "status": "next" }
+    { "time": "9:00 PM", "venue": "Larimer Beer Hall", "address": "2012 Larimer St", "area": "Ballpark", "note": "Tentative starting spot. Confirming before 9.", "status": "next" }
   ],
   "hide": []
 }
