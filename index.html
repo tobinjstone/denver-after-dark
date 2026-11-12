@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Denver After Dark</title>
-<meta name="description" content="Where the late-night crew is after the happy hours. Live all night, Thursday Nov 12.">
+<meta name="description" content="Unofficial. Where the late-night crew is after the happy hours, live all night Thursday Nov 12. No venues reserved; space may be limited.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Denver After Dark">
-<meta property="og:description" content="Where we are after the happy hours. Live all night.">
+<meta property="og:description" content="Unofficial. Where we are after the happy hours, live all night.">
 <meta property="og:url" content="https://tobinjstone.github.io/denver-after-dark/">
 <meta property="og:image" content="https://tobinjstone.github.io/denver-after-dark/og.png">
 <meta property="og:image:width" content="1200">
@@ -316,10 +316,18 @@ button { font: inherit; }
 }
 .earlier .hood { display: block; font-family: var(--f-body); font-size: 15px; color: var(--muted); margin-top: 2px; }
 
+.caveat { margin: -4px 0 0; font-size: 14px; color: var(--muted); }
+.caveat a { color: var(--ink); text-underline-offset: 3px; white-space: nowrap; }
+
+/* ---------- fine print ---------- */
+.fine { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 2px solid var(--unlit); display: grid; gap: 12px; font-size: 16px; color: var(--muted); }
+.fine b { color: var(--ink); font-weight: 600; }
+#fine-print { scroll-margin-top: 24px; }
+
 /* ---------- footer ---------- */
 .foot { display: grid; gap: 14px; justify-items: center; text-align: center; padding-top: 8px; }
 .foot .tube { width: 100%; max-width: 340px; }
-.foot p { margin: 0; color: var(--muted); font-size: 14px; }
+.foot p { margin: 0; color: var(--muted); font-size: 14px; text-wrap: balance; }
 
 @media (min-width: 700px) {
   .wrap { max-width: 560px; gap: 48px; padding-block-start: 36px; }
@@ -364,6 +372,8 @@ button { font: inherit; }
       <a class="tube" id="go-lyft" href="https://ride.lyft.com/" target="_blank" rel="noopener">Lyft</a>
     </nav>
 
+    <p class="caveat">Unofficial and unreserved. Space isn’t guaranteed. <a href="#fine-print">Fine print</a></p>
+
     <div class="checkin">
       <button class="check" type="button" data-k="here" aria-pressed="false">
         <span class="n" id="n-here">0</span>
@@ -404,9 +414,21 @@ button { font: inherit; }
     <ol class="earlier" id="earlier"></ol>
   </section>
 
+  <section id="fine-print" aria-labelledby="h-fine">
+    <h2 class="hd" id="h-fine">Fine print</h2>
+    <ul class="fine">
+      <li><b>Not official.</b> This isn’t a What’s Next event or part of the conference program. It’s attendees going out together.</li>
+      <li><b>Nothing is reserved.</b> We haven’t booked any venues. We show up like everyone else.</li>
+      <li><b>Space is limited.</b> Bars fill up and some will hit capacity. If you can’t get in, say so in the chat and we’ll sort out an overflow spot.</li>
+      <li><b>House rules apply.</b> Covers, lines and ID checks are up to each venue. 21+.</li>
+      <li><b>Your tab is yours.</b> Pay as you go and tip your bartenders.</li>
+      <li><b>Get home safe.</b> Rideshare, look out for each other, don’t drive.</li>
+    </ul>
+  </section>
+
   <footer class="foot">
     <a class="tube blue" href="https://partiful.com/e/9ouN1xvHTecHt3R3sUa6" target="_blank" rel="noopener">RSVP on Partiful</a>
-    <p>Unofficial. Thursday, Nov 12.</p>
+    <p>Unofficial. Not affiliated with What’s Next. Thursday, Nov 12.</p>
     <p id="host-tools" hidden><a href="https://docs.google.com/spreadsheets/d/1YTedVYSWeLrRCX_F3eUwHXh62TK4iZxq3XXNOzWIrLk/edit" target="_blank" rel="noopener">Edit the sheet</a></p>
   </footer>
 
