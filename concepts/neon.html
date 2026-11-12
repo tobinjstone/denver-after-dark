@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Denver After Dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tilt+Neon&family=Yellowtail&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Design plan
+   Layout: one sign-lit column on a painted cinderblock wall. The current venue is the lit tube;
+   past stops hang as unlit glass; supporting signage glows cool blue.
+   Color: warm argon-red tube for the venue, mercury-blue tube for signage, warm off-white for crisp text.
+   Type: Tilt Neon (tube lettering), Yellowtail (script signage), Barlow (crisp body / UI). */
+:root {
+  color-scheme: dark;
+  --wall: #151113;
+  --mortar: #0c0a0b;
+  --ink: #f0e7df;
+  --muted: #a99d95;
+  --field: rgba(8, 6, 7, .72);
+
+  --red: #ff5a2c;
+  --red-deep: #ff2b0f;
+  --red-core: #fff0e4;
+  --red-off: #5c2c22;
+
+  --blue: #45aaff;
+  --blue-deep: #1767ff;
+  --blue-core: #eaf5ff;
+
+  --unlit: #7b7074;
+
+  --glow-red: 0 0 1px #fff7f0, 0 0 4px var(--red), 0 0 10px var(--red), 0 0 22px var(--red-deep), 0 0 46px var(--red-deep);
+  --glow-blue: 0 0 1px #f6fbff, 0 0 4px var(--blue), 0 0 10px var(--blue), 0 0 22px var(--blue-deep);
+  --tube-red: 0 0 3px var(--red), 0 0 10px var(--red-deep), inset 0 0 5px var(--red);
+  --tube-blue: 0 0 3px var(--blue), 0 0 10px var(--blue-deep), inset 0 0 5px var(--blue);
+
+  --f-tube: "Tilt Neon", "Arial Rounded MT Bold", "Varela Round", system-ui, sans-serif;
+  --f-script: "Yellowtail", "Brush Script MT", cursive;
+  --f-body: "Barlow", "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.45;
+  background-color: var(--wall);
+  background-image:
+    radial-gradient(130% 70% at 50% 0%, transparent 35%, rgba(0, 0, 0, .55) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%23161214'/%3E%3Crect x='61.5' y='1.5' width='57' height='27' fill='%23181316'/%3E%3Crect x='1.5' y='31.5' width='27' height='27' fill='%23141012'/%3E%3Crect x='31.5' y='31.5' width='57' height='27' fill='%23171315'/%3E%3Cpath d='M0 .75H120M0 30.75H120M.75 0V30M60.75 0V30M30.75 30V60M90.75 30V60' stroke='%230c0a0b' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--blue-core); outline-offset: 3px; border-radius: 6px; }
+
+.wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: max(18px, env(safe-area-inset-top, 0px)) max(40px, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ---------- header: skyline + brand ---------- */
+.mast { display: grid; justify-items: center; gap: 2px; }
+.skyline { width: 100%; height: auto; display: block; overflow: visible;
+  filter: drop-shadow(0 0 2px var(--blue)) drop-shadow(0 0 8px var(--blue-deep)); }
+.skyline path { fill: none; stroke: var(--blue-core); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.skyline .clip { stroke: #2a2f3a; stroke-width: 3; filter: none; }
+.brand {
+  margin: 0;
+  font-family: var(--f-script);
+  font-weight: 400;
+  font-size: clamp(34px, 10vw, 46px);
+  line-height: 1.1;
+  color: var(--blue-core);
+  text-shadow: var(--glow-blue);
+  transform: rotate(-3deg);
+}
+
+/* ---------- hero sign ---------- */
+.hero { position: relative; isolation: isolate; display: grid; gap: 18px; }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -60px 0 -30px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(60% 55% at 50% 42%, rgba(255, 74, 30, .2), transparent 70%);
+}
+.sign-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.open-sign {
+  display: inline-flex; align-items: center;
+  padding: 6px 14px 5px;
+  border: 2px solid var(--blue-core);
+  border-radius: 10px;
+  box-shadow: var(--tube-blue);
+  font-family: var(--f-tube);
+  font-size: 20px;
+  letter-spacing: .08em;
+  color: var(--red-core);
+  text-shadow: var(--glow-red);
+}
+.fresh { font-size: 14px; color: var(--muted); }
+.fresh b { color: var(--ink); font-weight: 600; }
+
+.venue {
+  margin: 0;
+  font-family: var(--f-tube);
+  font-weight: 400;
+  line-height: .95;
+  color: var(--red-core);
+  text-shadow: var(--glow-red);
+  animation: strike 2.2s linear 1 both;
+  text-wrap: balance;
+}
+.venue .l1 { display: block; font-size: clamp(64px, 20vw, 92px); letter-spacing: -.01em; }
+.venue .l2 { display: block; font-size: clamp(32px, 10vw, 46px); margin-top: 8px; }
+.buzz { animation: buzz 4.3s linear 2.4s infinite; }
+
+@keyframes strike {
+  0%   { color: var(--red-off); text-shadow: none; }
+  7%   { color: var(--red-core); text-shadow: var(--glow-red); }
+  9%   { color: var(--red-off); text-shadow: none; }
+  15%  { color: var(--red-off); text-shadow: none; }
+  17%  { color: var(--red-core); text-shadow: var(--glow-red); }
+  19%  { color: var(--red-off); text-shadow: 0 0 6px var(--red-deep); }
+  27%  { color: var(--red-core); text-shadow: var(--glow-red); }
+  44%  { color: var(--red-core); text-shadow: var(--glow-red); }
+  46%  { color: #c9a294; text-shadow: 0 0 4px var(--red), 0 0 12px var(--red-deep); }
+  49%  { color: var(--red-core); text-shadow: var(--glow-red); }
+  100% { color: var(--red-core); text-shadow: var(--glow-red); }
+}
+@keyframes buzz {
+  0%, 58%, 61%, 64%, 100% { opacity: 1; }
+  59%, 60% { opacity: .55; }
+  62%, 63% { opacity: .72; }
+}
+
+.where { display: grid; gap: 4px; font-size: 18px; }
+.where .addr { font-weight: 600; font-size: 20px; }
+.where .meta { color: var(--muted); }
+.note {
+  margin: 4px 0 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--red);
+  font-size: 18px;
+  color: var(--ink);
+}
+
+/* ---------- tube buttons ---------- */
+.go { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; }
+.tube {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--red-core);
+  box-shadow: var(--tube-red);
+  background: rgba(255, 60, 20, .06);
+  color: var(--ink);
+  font: 600 17px/1 var(--f-body);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .15s, box-shadow .15s;
+}
+.tube:hover { background: rgba(255, 60, 20, .14); }
+.tube.blue { border-color: var(--blue-core); box-shadow: var(--tube-blue); background: rgba(40, 130, 255, .06); }
+.tube.blue:hover { background: rgba(40, 130, 255, .14); }
+
+.checkin { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.check {
+  display: grid; justify-items: center; gap: 2px;
+  min-height: 84px;
+  padding: 12px 10px;
+  border-radius: 18px;
+  border: 2px solid #3a3336;
+  background: var(--field);
+  color: var(--ink);
+  font: 600 16px/1.2 var(--f-body);
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, background-color .2s;
+}
+.check .n {
+  font-family: var(--f-tube);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--unlit);
+  transition: color .2s, text-shadow .2s;
+  font-variant-numeric: tabular-nums;
+}
+.check[data-k="here"] .n { color: var(--red-core); text-shadow: var(--glow-red); }
+.check[data-k="way"] .n { color: var(--blue-core); text-shadow: var(--glow-blue); }
+.check[aria-pressed="true"][data-k="here"] { border-color: var(--red-core); box-shadow: var(--tube-red); background: rgba(255, 60, 20, .1); }
+.check[aria-pressed="true"][data-k="way"] { border-color: var(--blue-core); box-shadow: var(--tube-blue); background: rgba(40, 130, 255, .1); }
+.check .sub { font-weight: 500; font-size: 13px; color: var(--muted); }
+
+/* ---------- script signage headings ---------- */
+.hd {
+  margin: 0 0 14px;
+  font-family: var(--f-script);
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--blue-core);
+  text-shadow: var(--glow-blue);
+}
+
+/* ---------- next ---------- */
+.next { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.clock {
+  font-family: var(--f-tube);
+  font-size: 54px;
+  line-height: 1;
+  color: var(--blue-core);
+  text-shadow: var(--glow-blue);
+  font-variant-numeric: tabular-nums;
+}
+.clock small { font-size: 22px; margin-left: 4px; }
+.next p { margin: 0; font-size: 18px; min-width: 0; flex: 1 1 160px; }
+.next p span { color: var(--muted); display: block; font-size: 16px; }
+
+/* ---------- chat ---------- */
+.chat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.msg { display: grid; gap: 4px; justify-items: start; max-width: 86%; }
+.msg .who { font-size: 13px; font-weight: 600; color: var(--muted); padding-left: 14px; }
+.msg .bubble {
+  padding: 10px 14px;
+  border-radius: 18px 18px 18px 6px;
+  border: 1.5px solid var(--blue-core);
+  box-shadow: 0 0 2px var(--blue), 0 0 7px var(--blue-deep), inset 0 0 4px rgba(69, 170, 255, .5);
+  background: rgba(8, 10, 16, .55);
+  font-size: 17px;
+  overflow-wrap: anywhere;
+}
+.msg.host .bubble { border-color: var(--red-core); box-shadow: 0 0 2px var(--red), 0 0 7px var(--red-deep), inset 0 0 4px rgba(255, 90, 44, .5); }
+.msg.host .who { color: var(--red-core); }
+.msg.me { justify-self: end; justify-items: end; }
+.msg.me .who { padding: 0 14px 0 0; }
+.msg.me .bubble { border-radius: 18px 18px 6px 18px; }
+
+.compose { margin-top: 18px; display: grid; gap: 10px; }
+.compose .row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.field {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #3d3639;
+  background: var(--field);
+  color: var(--ink);
+  font: 500 17px/1.2 var(--f-body);
+}
+.field::placeholder { color: #85797f; }
+.field:focus { outline: none; border-color: var(--blue-core); box-shadow: 0 0 2px var(--blue), 0 0 8px var(--blue-deep); }
+.field.name { max-width: 220px; min-height: 44px; font-size: 15px; padding-block: 10px; }
+.compose .tube { min-width: 88px; }
+
+/* ---------- earlier: unlit glass ---------- */
+.earlier { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.earlier li { display: grid; grid-template-columns: 74px 1fr; gap: 12px; align-items: baseline; }
+.earlier time { color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; }
+.earlier .glass {
+  font-family: var(--f-tube);
+  font-size: 26px;
+  line-height: 1.05;
+  color: var(--unlit);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .07), 0 -1px 0 rgba(0, 0, 0, .6);
+}
+.earlier .hood { display: block; font-family: var(--f-body); font-size: 15px; color: var(--muted); margin-top: 2px; }
+
+/* ---------- footer ---------- */
+.foot { display: grid; gap: 14px; justify-items: center; text-align: center; padding-top: 8px; }
+.foot .tube { width: 100%; max-width: 340px; }
+.foot p { margin: 0; color: var(--muted); font-size: 14px; }
+
+@media (min-width: 700px) {
+  .wrap { max-width: 560px; gap: 48px; padding-block-start: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venue, .buzz { animation: none; }
+  .tube, .check, .check .n { transition: none; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="mast">
+    <svg class="skyline" viewBox="0 0 400 92" role="img" aria-label="Front Range skyline">
+      <path d="M6 82 L34 70 L50 74 L76 52 L88 47 L102 56 L126 62"/>
+      <path d="M134 60 L154 49 L176 34 L190 40 L208 29 L224 41 L246 53 L262 47"/>
+      <path d="M270 45 L290 31 L301 21 L313 20 L324 27 L334 24 L350 41 L370 55 L394 66"/>
+      <path class="clip" d="M128 61.5 L132 60.5 M264 46.5 L268 45.5"/>
+    </svg>
+    <h1 class="brand">Denver After Dark</h1>
+  </header>
+
+  <section class="hero" aria-labelledby="venue">
+    <div class="sign-row">
+      <span class="open-sign">HERE NOW</span>
+      <span class="fresh">Updated <b id="ago">4 min ago</b></span>
+    </div>
+
+    <h2 class="venue" id="venue">
+      <span class="l1">Ophelia’s</span>
+      <span class="l2">Ele<span class="buzz">c</span>tric Soapbox</span>
+    </h2>
+
+    <div class="where">
+      <span class="addr">1215 20th St</span>
+      <span class="meta">Ballpark · here since 11:10 PM</span>
+    </div>
+    <p class="note">Downstairs. We’re by the stage.</p>
+
+    <nav class="go" aria-label="Get there">
+      <a class="tube" href="https://www.google.com/maps/dir/?api=1&amp;destination=Ophelia%27s%20Electric%20Soapbox%2C%201215%2020th%20St%2C%20Denver%2C%20CO" target="_blank" rel="noopener">Directions</a>
+      <a class="tube" href="https://m.uber.com/ul/?action=setPickup&amp;pickup=my_location&amp;dropoff%5Bformatted_address%5D=1215%2020th%20St%2C%20Denver%2C%20CO&amp;dropoff%5Bnickname%5D=Ophelia%27s" target="_blank" rel="noopener">Uber</a>
+      <a class="tube" href="https://ride.lyft.com/" target="_blank" rel="noopener">Lyft</a>
+    </nav>
+
+    <div class="checkin">
+      <button class="check" type="button" data-k="here" aria-pressed="false">
+        <span class="n" id="n-here">41</span>
+        <span>I’m here</span>
+      </button>
+      <button class="check" type="button" data-k="way" aria-pressed="false">
+        <span class="n" id="n-way">12</span>
+        <span>On my way</span>
+      </button>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-next">
+    <h2 class="hd" id="h-next">Up next</h2>
+    <div class="next">
+      <span class="clock">12:30<small>AM</small></span>
+      <p>Moving around then.<span>Spot TBD. Pitch one in the chat.</span></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-chat">
+    <h2 class="hd" id="h-chat">Bar talk</h2>
+    <ol class="chat-list" id="chat">
+      <li class="msg"><span class="who">Maya</span><span class="bubble">leaving the Hilton reception now, 10 min</span></li>
+      <li class="msg"><span class="who">Jordan</span><span class="bubble">is there a cover?</span></li>
+      <li class="msg host"><span class="who">Host</span><span class="bubble">no cover, just come down</span></li>
+      <li class="msg"><span class="who">Sam</span><span class="bubble">someone save me a spot by the stage</span></li>
+      <li class="msg"><span class="who">Priya</span><span class="bubble">who’s in for Pete’s Kitchen after</span></li>
+      <li class="msg"><span class="who">Alex</span><span class="bubble">🫡</span></li>
+    </ol>
+    <form class="compose" id="compose" autocomplete="off">
+      <input class="field name" id="chat-name" name="name" type="text" maxlength="24" placeholder="Your name" aria-label="Your name">
+      <div class="row">
+        <input class="field" id="chat-text" name="text" type="text" maxlength="280" placeholder="Say something" aria-label="Message" required>
+        <button class="tube blue" type="submit">Send</button>
+      </div>
+    </form>
+  </section>
+
+  <section aria-labelledby="h-earlier">
+    <h2 class="hd" id="h-earlier">Earlier tonight</h2>
+    <ol class="earlier">
+      <li><time>10:05 PM</time><span class="glass">Improper City<span class="hood">RiNo</span></span></li>
+      <li><time>9:00 PM</time><span class="glass">Number Thirty Eight<span class="hood">RiNo</span></span></li>
+    </ol>
+  </section>
+
+  <footer class="foot">
+    <a class="tube blue" href="https://partiful.com/e/9ouN1xvHTecHt3R3sUa6" target="_blank" rel="noopener">RSVP on Partiful</a>
+    <p>Unofficial. Thursday, Nov 12.</p>
+  </footer>
+
+</main>
+
+<script>
+(() => {
+  // freshness stamp: sample data says updated 4 min before load
+  const ago = document.getElementById('ago');
+  const loaded = Date.now();
+  const tick = () => {
+    const m = 4 + Math.floor((Date.now() - loaded) / 60000);
+    ago.textContent = m === 1 ? '1 min ago' : m + ' min ago';
+  };
+  setInterval(tick, 20000);
+
+  // check-ins (local only for now)
+  const counts = { here: 41, way: 12 };
+  let mine = null;
+  const btns = document.querySelectorAll('.check');
+  const render = () => {
+    document.getElementById('n-here').textContent = counts.here;
+    document.getElementById('n-way').textContent = counts.way;
+    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.k === mine)));
+  };
+  btns.forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.k;
+    if (mine === k) { counts[k]--; mine = null; }
+    else { if (mine) counts[mine]--; counts[k]++; mine = k; }
+    render();
+  }));
+
+  // chat (local append for now)
+  const form = document.getElementById('compose');
+  const nameEl = document.getElementById('chat-name');
+  const textEl = document.getElementById('chat-text');
+  const list = document.getElementById('chat');
+  try { nameEl.value = localStorage.getItem('dad-name') || ''; } catch (e) {}
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const text = textEl.value.trim();
+    if (!text) return;
+    const name = nameEl.value.trim() || 'You';
+    try { localStorage.setItem('dad-name', nameEl.value.trim()); } catch (e) {}
+    const li = document.createElement('li');
+    li.className = 'msg me';
+    const who = document.createElement('span'); who.className = 'who'; who.textContent = name;
+    const bubble = document.createElement('span'); bubble.className = 'bubble'; bubble.textContent = text;
+    li.append(who, bubble);
+    list.append(li);
+    textEl.value = '';
+    li.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
+})();
+</script>
+</body>
+</html>
