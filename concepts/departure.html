@@ -132,7 +132,7 @@ body{
 .stubs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .stub{
   --n:7px;
-  display:flex;flex-direction:column;justify-content:center;gap:3px;min-height:60px;padding:10px 14px;
+  display:flex;flex-direction:column;justify-content:center;gap:3px;min-height:60px;padding:10px 12px 10px 13px;
   background:var(--ticket);color:var(--ink);text-decoration:none;border-radius:3px;
   -webkit-mask:
     radial-gradient(circle var(--n) at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,
@@ -140,10 +140,9 @@ body{
           mask:
     radial-gradient(circle var(--n) at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,
     radial-gradient(circle var(--n) at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
-  background-image:linear-gradient(90deg,transparent 0 calc(100% - 1px),rgba(27,24,18,.0) 0);
   transition:transform .12s ease, background-color .12s ease;
 }
-.stub strong{font-size:15px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.stub strong{font-size:14px;font-weight:800;letter-spacing:.03em;text-transform:uppercase}
 .stub span{font-family:var(--text);font-weight:600;font-size:13px;opacity:.7}
 .stub:first-child{background-color:var(--amber)}
 .stub:hover{transform:translateY(-1px)}
@@ -187,7 +186,8 @@ body{
 .deps th:last-child,.deps td:last-child{text-align:right}
 .deps td{
   padding:11px 10px;vertical-align:top;font-size:14px;font-weight:700;text-transform:uppercase;
-  background:linear-gradient(to bottom,var(--tile-top) 0 calc(50% - .5px),var(--split) calc(50% - .5px) calc(50% + .5px),var(--tile-bot) calc(50% + .5px));
+  background:linear-gradient(to bottom,var(--tile-top),var(--tile-bot));
+  border-top:1px solid #2f2d28;
 }
 .deps td:first-child{border-radius:3px 0 0 3px;white-space:nowrap;width:1%}
 .deps td:last-child{border-radius:0 3px 3px 0;white-space:nowrap;width:1%}
@@ -236,7 +236,7 @@ body{
 .rsvp span{color:var(--amber);font-size:18px}
 .rsvp:hover{border-color:var(--amber)}
 
-@keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.25}}
+@keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.45}}
 
 @media (min-width:960px){
   .board{
@@ -329,7 +329,7 @@ body{
   </section>
 
   <section class="dep" aria-labelledby="dep-title">
-    <h2 class="title" id="dep-title">Departures <small>Thu Nov 12</small></h2>
+    <h2 class="title" id="dep-title">Departures</h2>
     <table class="deps">
       <thead><tr><th scope="col">Time</th><th scope="col">Destination</th><th scope="col">Status</th></tr></thead>
       <tbody>
