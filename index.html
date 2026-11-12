@@ -469,6 +469,8 @@ button { font: inherit; }
   const $ = (id) => document.getElementById(id);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isHost = location.hash === '#host';
+  // #demo (or ?demo) renders sample data with no network, for design previews
+  const DEMO = location.hash === '#demo' || /[?&]demo\b/.test(location.search);
   const store = {
     get(k, d) { try { const v = localStorage.getItem('dad:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem('dad:' + k, JSON.stringify(v)); } catch (e) {} },
@@ -663,6 +665,8 @@ button { font: inherit; }
 
     renderCounts();
     renderChat();
+    // hook for decorative scripts: detail = { now, next, earlier, key }
+    document.dispatchEvent(new CustomEvent('dad:render', { detail: { now, next, earlier, key: venueKey(hero) } }));
   }
 
   function renderFresh() {
@@ -770,6 +774,7 @@ button { font: inherit; }
   }
 
   async function publish(topic, message, title) {
+    if (DEMO) return { id: 'demo' + Date.now(), time: Math.floor(Date.now() / 1000), event: 'message', topic, message, title };
     const body = { topic, message };
     if (title) body.title = title;
     const r = await fetch(CONFIG.ntfy + '/', { method: 'POST', body: JSON.stringify(body) });
@@ -847,14 +852,33 @@ button { font: inherit; }
   /* ---------------- boot ---------------- */
 
   if (isHost) $('host-tools').hidden = false;
-  render();
-  load();
-  connect();
-  setInterval(() => { if (!document.hidden) load(); }, CONFIG.pollMs);
-  setInterval(renderFresh, 5000);
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) { load(); if (!es || es.readyState === 2) connect(); }
-  });
+
+  if (DEMO) {
+    const t = Math.floor(Date.now() / 1000);
+    data = { hide: [], stops: [
+      { time: '9:00 PM', venue: 'Larimer Beer Hall', address: '2012 Larimer St', area: 'Ballpark', note: '', status: '' },
+      { time: '10:15 PM', venue: 'Ophelia’s Electric Soapbox', address: '1215 20th St', area: 'Ballpark', note: 'Downstairs. We’re by the stage.', status: '' },
+      { time: '11:30 PM', venue: 'TBD', address: '', area: '', note: 'Ideas in the chat.', status: 'next' },
+    ] };
+    render();
+    [['Maya', 'leaving the Hilton reception now, 10 min', -900], ['Jordan', 'is there a cover?', -700],
+     ['Sam', 'someone save me a spot by the stage', -400], ['Priya', 'who’s in for Pete’s Kitchen after', -200], ['Alex', '🫡', -60]]
+      .forEach(([n, m, dt], i) => onEvent({ id: 'd' + i, time: t + dt, event: 'message', topic: CONFIG.chatTopic, title: n, message: m }));
+    const key = venueKey(current);
+    for (let i = 0; i < 32; i++) onEvent({ id: 'p' + i, time: t - 100 + i, event: 'message', topic: CONFIG.pulseTopic, message: JSON.stringify({ c: 'demo' + i, s: i < 23 ? 'here' : 'way', v: key }) });
+    lastSync = Date.now();
+    renderFresh();
+    setInterval(() => { lastSync = Date.now(); renderFresh(); }, 5000);
+  } else {
+    render();
+    load();
+    connect();
+    setInterval(() => { if (!document.hidden) load(); }, CONFIG.pollMs);
+    setInterval(renderFresh, 5000);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) { load(); if (!es || es.readyState === 2) connect(); }
+    });
+  }
 })();
 </script>
 </body>
