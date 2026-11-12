@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Denver After Dark</title>
+<meta name="description" content="Unofficial. Where the late-night crew is after the happy hours, live all night Thursday Nov 12. No venues reserved; space may be limited.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Denver After Dark">
+<meta property="og:description" content="Unofficial. Where we are after the happy hours, live all night.">
+<meta property="og:url" content="https://tobinjstone.github.io/denver-after-dark/">
+<meta property="og:image" content="https://tobinjstone.github.io/denver-after-dark/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#151113">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151113'/%3E%3Cpath d='M8 46 L20 34 L27 38 L38 22 L45 28 L56 18' fill='none' stroke='%23ff6a3d' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tilt+Neon&family=Yellowtail&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one sign-lit column on a painted cinderblock wall. The current venue is the lit tube;
+   past stops hang as unlit glass; supporting signage glows cool blue.
+   Color: warm argon-red tube for the venue, mercury-blue tube for signage, warm off-white text.
+   Type: Tilt Neon (tube lettering), Yellowtail (script signage), Barlow (crisp body / UI). */
+:root {
+  color-scheme: dark;
+  --wall: #151113;
+  --ink: #f0e7df;
+  --muted: #a99d95;
+  --field: rgba(8, 6, 7, .72);
+  --edge: #3d3639;
+
+  --red: #ff5a2c;
+  --red-deep: #ff2b0f;
+  --red-core: #fff0e4;
+  --red-off: #5c2c22;
+
+  --blue: #45aaff;
+  --blue-deep: #1767ff;
+  --blue-core: #eaf5ff;
+
+  --green: #5dff9c;
+  --warn: #ffb36b;
+  --unlit: #7b7074;
+
+  --glow-red: 0 0 1px #fff7f0, 0 0 4px var(--red), 0 0 10px var(--red), 0 0 22px var(--red-deep), 0 0 46px var(--red-deep);
+  --glow-blue: 0 0 1px #f6fbff, 0 0 4px var(--blue), 0 0 10px var(--blue), 0 0 22px var(--blue-deep);
+  --tube-red: 0 0 3px var(--red), 0 0 10px var(--red-deep), inset 0 0 5px var(--red);
+  --tube-blue: 0 0 3px var(--blue), 0 0 10px var(--blue-deep), inset 0 0 5px var(--blue);
+
+  --f-tube: "Tilt Neon", "Arial Rounded MT Bold", "Varela Round", system-ui, sans-serif;
+  --f-script: "Yellowtail", "Brush Script MT", cursive;
+  --f-body: "Barlow", "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.45;
+  background-color: var(--wall);
+  background-image:
+    radial-gradient(130% 70% at 50% 0%, transparent 35%, rgba(0, 0, 0, .55) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%23161214'/%3E%3Crect x='61.5' y='1.5' width='57' height='27' fill='%23181316'/%3E%3Crect x='1.5' y='31.5' width='27' height='27' fill='%23141012'/%3E%3Crect x='31.5' y='31.5' width='57' height='27' fill='%23171315'/%3E%3Cpath d='M0 .75H120M0 30.75H120M.75 0V30M60.75 0V30M30.75 30V60M90.75 30V60' stroke='%230c0a0b' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+[hidden] { display: none !important; }
+a { color: inherit; }
+button { font: inherit; }
+:focus-visible { outline: 2px solid var(--blue-core); outline-offset: 3px; border-radius: 6px; }
+
+.wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: max(18px, env(safe-area-inset-top, 0px)) max(40px, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ---------- header ---------- */
+.mast { display: grid; justify-items: center; gap: 2px; }
+.skyline { width: 100%; height: auto; display: block; overflow: visible;
+  filter: drop-shadow(0 0 2px var(--blue)) drop-shadow(0 0 8px var(--blue-deep)); }
+.skyline path { fill: none; stroke: var(--blue-core); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.skyline .clip { stroke: #2a2f3a; stroke-width: 3; }
+.brand {
+  margin: 0;
+  font-family: var(--f-script);
+  font-weight: 400;
+  font-size: clamp(34px, 10vw, 46px);
+  line-height: 1.1;
+  color: var(--blue-core);
+  text-shadow: var(--glow-blue);
+  transform: rotate(-3deg);
+}
+
+/* ---------- hero sign ---------- */
+.hero { position: relative; isolation: isolate; display: grid; gap: 18px; }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -60px 0 -30px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(60% 55% at 50% 42%, rgba(255, 74, 30, .2), transparent 70%);
+}
+.sign-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.open-sign {
+  display: inline-flex; align-items: center;
+  padding: 6px 14px 5px;
+  border: 2px solid var(--blue-core);
+  border-radius: 10px;
+  box-shadow: var(--tube-blue);
+  font-family: var(--f-tube);
+  font-size: 20px;
+  letter-spacing: .08em;
+  color: var(--red-core);
+  text-shadow: var(--glow-red);
+  text-transform: uppercase;
+}
+.fresh { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+.fresh b { color: var(--ink); font-weight: 600; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2.4s ease-in-out infinite; }
+.fresh.stale .dot { background: var(--warn); box-shadow: 0 0 6px var(--warn); animation: none; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+.venue {
+  margin: 0;
+  font-family: var(--f-tube);
+  font-weight: 400;
+  line-height: .98;
+  color: var(--red-core);
+  text-shadow: var(--glow-red);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  font-size: clamp(64px, 20vw, 92px);
+  letter-spacing: -.01em;
+}
+.venue[data-size="l"] { font-size: clamp(50px, 15vw, 72px); }
+.venue[data-size="m"] { font-size: clamp(40px, 12vw, 58px); }
+.venue[data-size="s"] { font-size: clamp(32px, 9.5vw, 46px); }
+.venue.strike { animation: strike 2.2s linear 1 both; }
+.buzz { animation: buzz 4.3s linear 2.4s infinite; }
+
+@keyframes strike {
+  0%   { color: var(--red-off); text-shadow: none; }
+  7%   { color: var(--red-core); text-shadow: var(--glow-red); }
+  9%   { color: var(--red-off); text-shadow: none; }
+  15%  { color: var(--red-off); text-shadow: none; }
+  17%  { color: var(--red-core); text-shadow: var(--glow-red); }
+  19%  { color: var(--red-off); text-shadow: 0 0 6px var(--red-deep); }
+  27%  { color: var(--red-core); text-shadow: var(--glow-red); }
+  44%  { color: var(--red-core); text-shadow: var(--glow-red); }
+  46%  { color: #c9a294; text-shadow: 0 0 4px var(--red), 0 0 12px var(--red-deep); }
+  49%  { color: var(--red-core); text-shadow: var(--glow-red); }
+  100% { color: var(--red-core); text-shadow: var(--glow-red); }
+}
+@keyframes buzz {
+  0%, 58%, 61%, 64%, 100% { opacity: 1; }
+  59%, 60% { opacity: .55; }
+  62%, 63% { opacity: .72; }
+}
+
+.where { display: grid; gap: 4px; font-size: 18px; justify-items: start; }
+.addr {
+  padding: 0; border: 0; background: none; color: var(--ink);
+  font: 600 20px/1.3 var(--f-body);
+  text-align: left;
+  text-decoration: underline dotted rgba(240, 231, 223, .45);
+  text-underline-offset: 5px;
+  cursor: pointer;
+  min-height: 32px;
+}
+.addr .copied { font-weight: 500; font-size: 14px; color: var(--green); margin-left: 8px; text-decoration: none; display: inline-block; }
+.where .meta { color: var(--muted); }
+.note {
+  margin: 4px 0 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--red);
+  font-size: 18px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+/* ---------- tube buttons ---------- */
+.go { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; }
+.tube {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--red-core);
+  box-shadow: var(--tube-red);
+  background: rgba(255, 60, 20, .06);
+  color: var(--ink);
+  font: 600 17px/1 var(--f-body);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .15s, box-shadow .15s;
+}
+.tube:hover { background: rgba(255, 60, 20, .14); }
+.tube.blue { border-color: var(--blue-core); box-shadow: var(--tube-blue); background: rgba(40, 130, 255, .06); }
+.tube.blue:hover { background: rgba(40, 130, 255, .14); }
+.tube:disabled { opacity: .5; cursor: default; }
+
+.checkin { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.check {
+  display: grid; justify-items: center; gap: 2px;
+  min-height: 84px;
+  padding: 12px 10px;
+  border-radius: 18px;
+  border: 2px solid #3a3336;
+  background: var(--field);
+  color: var(--ink);
+  font: 600 16px/1.2 var(--f-body);
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, background-color .2s;
+}
+.check .n {
+  font-family: var(--f-tube);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.check[data-k="here"] .n { color: var(--red-core); text-shadow: var(--glow-red); }
+.check[data-k="way"] .n { color: var(--blue-core); text-shadow: var(--glow-blue); }
+.check[aria-pressed="true"][data-k="here"] { border-color: var(--red-core); box-shadow: var(--tube-red); background: rgba(255, 60, 20, .1); }
+.check[aria-pressed="true"][data-k="way"] { border-color: var(--blue-core); box-shadow: var(--tube-blue); background: rgba(40, 130, 255, .1); }
+
+/* ---------- script signage headings ---------- */
+.hd {
+  margin: 0 0 14px;
+  font-family: var(--f-script);
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--blue-core);
+  text-shadow: var(--glow-blue);
+}
+
+/* ---------- next ---------- */
+.next { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.clock {
+  font-family: var(--f-tube);
+  font-size: 54px;
+  line-height: 1;
+  color: var(--blue-core);
+  text-shadow: var(--glow-blue);
+  font-variant-numeric: tabular-nums;
+}
+.clock small { font-size: 22px; margin-left: 4px; }
+.next p { margin: 0; font-size: 18px; min-width: 0; flex: 1 1 160px; overflow-wrap: anywhere; }
+.next p span { color: var(--muted); display: block; font-size: 16px; }
+
+/* ---------- chat ---------- */
+.compose { display: grid; gap: 10px; margin-bottom: 22px; }
+.compose .row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.field {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--edge);
+  background: var(--field);
+  color: var(--ink);
+  font: 500 17px/1.2 var(--f-body);
+}
+.field::placeholder { color: #85797f; }
+.field:focus { outline: none; border-color: var(--blue-core); box-shadow: 0 0 2px var(--blue), 0 0 8px var(--blue-deep); }
+.field.name { max-width: 220px; min-height: 44px; font-size: 15px; padding-block: 10px; }
+.compose .tube { min-width: 88px; }
+.compose-err { margin: 0; font-size: 14px; color: var(--warn); }
+
+.chat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.msg { display: grid; gap: 4px; justify-items: start; max-width: 86%; }
+.msg .who { font-size: 13px; font-weight: 600; color: var(--muted); padding-left: 14px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.msg .who time { font-weight: 500; color: #7f7479; font-variant-numeric: tabular-nums; }
+.msg .bubble {
+  padding: 10px 14px;
+  border-radius: 18px 18px 18px 6px;
+  border: 1.5px solid var(--blue-core);
+  box-shadow: 0 0 2px var(--blue), 0 0 7px var(--blue-deep), inset 0 0 4px rgba(69, 170, 255, .5);
+  background: rgba(8, 10, 16, .55);
+  font-size: 17px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.msg.me { justify-self: end; justify-items: end; }
+.msg.me .who { padding: 0 14px 0 0; }
+.msg.me .bubble { border-radius: 18px 18px 6px 18px; border-color: var(--red-core); box-shadow: 0 0 2px var(--red), 0 0 7px var(--red-deep), inset 0 0 4px rgba(255, 90, 44, .5); }
+.msg.pending .bubble { opacity: .6; }
+.hostid { border: 1px solid var(--edge); background: none; color: var(--muted); border-radius: 6px; font-size: 12px; padding: 2px 6px; cursor: pointer; }
+.chat-empty { color: var(--muted); margin: 0; }
+.older { margin-top: 16px; background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 8px 0; font-size: 15px; }
+
+/* ---------- earlier: unlit glass ---------- */
+.earlier { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.earlier li { display: grid; grid-template-columns: 74px 1fr; gap: 12px; align-items: baseline; }
+.earlier time { color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; }
+.earlier .glass {
+  font-family: var(--f-tube);
+  font-size: 26px;
+  line-height: 1.05;
+  color: var(--unlit);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .07), 0 -1px 0 rgba(0, 0, 0, .6);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.earlier .hood { display: block; font-family: var(--f-body); font-size: 15px; color: var(--muted); margin-top: 2px; }
+
+.caveat { margin: -4px 0 0; font-size: 14px; color: var(--muted); }
+.caveat a { color: var(--ink); text-underline-offset: 3px; white-space: nowrap; }
+
+/* ---------- fine print ---------- */
+.fine { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 2px solid var(--unlit); display: grid; gap: 12px; font-size: 16px; color: var(--muted); }
+.fine b { color: var(--ink); font-weight: 600; }
+#fine-print { scroll-margin-top: 24px; }
+
+/* ---------- footer ---------- */
+.foot { display: grid; gap: 14px; justify-items: center; text-align: center; padding-top: 8px; }
+.foot .tube { width: 100%; max-width: 340px; }
+.foot p { margin: 0; color: var(--muted); font-size: 14px; text-wrap: balance; }
+.contact { display: grid; justify-items: center; gap: 10px; padding-top: 10px; width: 100%; }
+.contact-name {
+  font-family: var(--f-tube);
+  font-size: 30px;
+  line-height: 1.1;
+  color: var(--red-core);
+  text-shadow: var(--glow-red);
+}
+.contact-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+.foot .tube.small { width: auto; max-width: none; min-height: 46px; font-size: 16px; padding-inline: 18px; }
+
+@media (min-width: 700px) {
+  .wrap { max-width: 560px; gap: 48px; padding-block-start: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venue.strike, .buzz, .dot { animation: none; }
+  .tube, .check { transition: none; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="mast">
+    <svg class="skyline" viewBox="0 0 400 92" role="img" aria-label="Front Range skyline">
+      <path d="M6 82 L34 70 L50 74 L76 52 L88 47 L102 56 L126 62"/>
+      <path d="M134 60 L154 49 L176 34 L190 40 L208 29 L224 41 L246 53 L262 47"/>
+      <path d="M270 45 L290 31 L301 21 L313 20 L324 27 L334 24 L350 41 L370 55 L394 66"/>
+      <path class="clip" d="M128 61.5 L132 60.5 M264 46.5 L268 45.5"/>
+    </svg>
+    <h1 class="brand">Denver After Dark</h1>
+  </header>
+
+  <section class="hero" aria-labelledby="venue">
+    <div class="sign-row">
+      <span class="open-sign" id="sign">Starts 9:00 PM</span>
+      <span class="fresh" id="fresh" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="fresh-text">Live</span></span>
+    </div>
+
+    <h2 class="venue strike" id="venue" data-size="xl">Soon</h2>
+
+    <div class="where" id="where" hidden>
+      <button class="addr" id="addr" type="button" title="Copy address"></button>
+      <span class="meta" id="meta"></span>
+    </div>
+    <p class="note" id="note">Starting spot drops soon.</p>
+
+    <nav class="go" id="go" aria-label="Get there" hidden>
+      <a class="tube" id="go-maps" href="#" target="_blank" rel="noopener">Directions</a>
+      <a class="tube" id="go-uber" href="#" target="_blank" rel="noopener">Uber</a>
+      <a class="tube" id="go-lyft" href="https://ride.lyft.com/" target="_blank" rel="noopener">Lyft</a>
+    </nav>
+
+    <p class="caveat">Unofficial and unreserved. Space might be limited. <a href="#fine-print">Fine print</a></p>
+
+    <div class="checkin">
+      <button class="check" type="button" data-k="here" aria-pressed="false">
+        <span class="n" id="n-here">0</span>
+        <span>I’m here</span>
+      </button>
+      <button class="check" type="button" data-k="way" aria-pressed="false">
+        <span class="n" id="n-way">0</span>
+        <span>On my way</span>
+      </button>
+    </div>
+  </section>
+
+  <section id="next-sec" aria-labelledby="h-next" hidden>
+    <h2 class="hd" id="h-next">Up next</h2>
+    <div class="next">
+      <span class="clock" id="next-clock"></span>
+      <p id="next-text"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-chat">
+    <h2 class="hd" id="h-chat">Bar talk</h2>
+    <form class="compose" id="compose" autocomplete="off">
+      <input class="field name" id="chat-name" name="name" type="text" maxlength="24" placeholder="Your name" aria-label="Your name" required>
+      <div class="row">
+        <input class="field" id="chat-text" name="text" type="text" maxlength="280" placeholder="Say something" aria-label="Message" required>
+        <button class="tube blue" id="chat-send" type="submit">Send</button>
+      </div>
+      <p class="compose-err" id="chat-err" role="alert" hidden></p>
+    </form>
+    <ol class="chat-list" id="chat" aria-live="polite"></ol>
+    <p class="chat-empty" id="chat-empty">Quiet so far. Say hi.</p>
+    <button class="older" id="chat-older" type="button" hidden>Show older messages</button>
+  </section>
+
+  <section id="earlier-sec" aria-labelledby="h-earlier" hidden>
+    <h2 class="hd" id="h-earlier">Earlier tonight</h2>
+    <ol class="earlier" id="earlier"></ol>
+  </section>
+
+  <section id="fine-print" aria-labelledby="h-fine">
+    <h2 class="hd" id="h-fine">Fine print</h2>
+    <ul class="fine">
+      <li><b>This is not official programming.</b> This isn’t a What’s Next event or part of the conference program. I just wanted to get people together to hit the town after the happy hours ended, and apparently a LOT of you liked that idea.</li>
+      <li><b>Nothing is reserved.</b> I haven’t booked any venues. Every place I’m currently planning to hit can fit hundreds of people though, so things should be fine, but space might be limited. If you can’t get in, say so in the chat and we’ll sort out an overflow spot. Lots of great places in the area!</li>
+      <li><b>Your tab is yours.</b> Pay as you go and tip your bartenders!</li>
+      <li><b>DRINK LOTS OF WATER.</b></li>
+      <li><b>Get home safe.</b> Rideshare, look out for each other, don’t drive.</li>
+    </ul>
+  </section>
+
+  <footer class="foot">
+    <a class="tube blue" href="https://partiful.com/e/9ouN1xvHTecHt3R3sUa6" target="_blank" rel="noopener">RSVP on Partiful</a>
+    <div class="contact">
+      <span class="contact-name">Tobin Stone</span>
+      <div class="contact-links">
+        <a class="tube small" href="tel:+14026197744">Cell: (402) 619-7744</a>
+        <a class="tube small" href="https://signal.me/#eu/lgzPyzizJplxlrE0gIJtOZObRm3jjp5O85V7gKiVjMiCcDsTip1In7R1XeK94l3E" target="_blank" rel="noopener">Signal</a>
+      </div>
+    </div>
+    <p>Unofficial. Not affiliated with What’s Next. Thursday, Nov 12.</p>
+    <p id="host-tools" hidden><a href="https://docs.google.com/spreadsheets/d/1YTedVYSWeLrRCX_F3eUwHXh62TK4iZxq3XXNOzWIrLk/edit" target="_blank" rel="noopener">Edit the sheet</a></p>
+  </footer>
+
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  const CONFIG = {
+    sheetId: '1YTedVYSWeLrRCX_F3eUwHXh62TK4iZxq3XXNOzWIrLk',
+    fallbackJson: 'data.json',
+    pollMs: 20000,
+    ntfy: 'https://ntfy.sh',
+    chatTopic: 'denver-after-dark-nov12-k7x9q',
+    pulseTopic: 'denver-after-dark-nov12-k7x9q-pulse',
+    city: 'Denver, CO',
+    pageSize: 40,
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isHost = location.hash === '#host';
+  // #demo (or ?demo) renders sample data with no network, for design previews
+  const DEMO = location.hash === '#demo' || /[?&]demo\b/.test(location.search);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('dad:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('dad:' + k, JSON.stringify(v)); } catch (e) {} },
+  };
+
+  let clientId = store.get('cid', null);
+  if (!clientId) { clientId = Math.random().toString(36).slice(2) + Date.now().toString(36); store.set('cid', clientId); }
+
+  /* ---------------- live data: Google Sheet, fallback data.json ---------------- */
+
+  const DEFAULT = { stops: [{ time: '9:00 PM', venue: 'Larimer Beer Hall', address: '2012 Larimer St', area: 'Ballpark', note: 'Tentative starting spot. Confirming before 9.', status: 'next' }], hide: [] };
+  let data = store.get('data', DEFAULT);
+  let lastSync = 0;
+  let lastNowKey = null;
+
+  function parseGviz(text) {
+    const j = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
+    if (j.status === 'error') throw new Error('sheet error');
+    const cols = j.table.cols.map((c) => String(c.label || c.id || '').trim().toLowerCase());
+    return j.table.rows.map((r) => {
+      const o = {};
+      cols.forEach((k, i) => {
+        const c = r.c && r.c[i];
+        o[k] = c == null ? '' : String(c.f != null ? c.f : (c.v != null ? c.v : '')).trim();
+      });
+      return o;
+    });
+  }
+
+  async function sheetTab(name) {
+    const url = 'https://docs.google.com/spreadsheets/d/' + CONFIG.sheetId + '/gviz/tq?tqx=out:json&headers=1&sheet=' + encodeURIComponent(name);
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error('sheet ' + r.status);
+    return parseGviz(await r.text());
+  }
+
+  function cleanStops(rows) {
+    return rows.map((r) => ({
+      time: r.time || '',
+      venue: r.venue || '',
+      address: r.address || '',
+      area: r.area || r.neighborhood || '',
+      note: r.note || '',
+      status: (r.status || '').toLowerCase(),
+    })).filter((s) => s.venue || s.time);
+  }
+
+  async function load() {
+    let next = null;
+    try {
+      const [stops, hide] = await Promise.all([sheetTab('Stops'), sheetTab('Hide').catch(() => [])]);
+      next = {
+        stops: cleanStops(stops),
+        hide: hide.map((r) => Object.values(r)[0]).filter(Boolean),
+      };
+    } catch (e) {
+      try {
+        const r = await fetch(CONFIG.fallbackJson + '?t=' + Date.now(), { cache: 'no-store' });
+        if (r.ok) {
+          const j = await r.json();
+          next = { stops: cleanStops(j.stops || []), hide: j.hide || [] };
+        }
+      } catch (e2) {}
+    }
+    if (next) {
+      data = next;
+      lastSync = Date.now();
+      store.set('data', data);
+      render();
+    }
+    renderFresh();
+  }
+
+  /* ---------------- render the night ---------------- */
+
+  const unknown = (v) => !v || /^(tba|tbd|\?+|soon)$/i.test(v.trim());
+  const fullAddress = (a) => (/denver|,\s*co\b/i.test(a) ? a : a + ', ' + CONFIG.city);
+  const venueKey = (s) => (s ? (s.venue + '|' + s.address).toLowerCase() : 'none');
+
+  function split(stops) {
+    let nowIdx = -1;
+    stops.forEach((s, i) => { if (s.status !== 'next') nowIdx = i; });
+    const now = nowIdx >= 0 ? stops[nowIdx] : null;
+    const next = stops.find((s) => s.status === 'next') || null;
+    const earlier = nowIdx > 0 ? stops.slice(0, nowIdx).filter((s) => s.status !== 'next').reverse() : [];
+    return { now, next, earlier };
+  }
+
+  function sizeFor(name) {
+    const n = name.length;
+    const longest = Math.max(...name.split(/\s+/).map((w) => w.length));
+    if (n <= 9 && longest <= 9) return 'xl';
+    if (n <= 16 && longest <= 11) return 'l';
+    if (n <= 26 && longest <= 13) return 'm';
+    return 's';
+  }
+
+  function setVenue(name, key) {
+    const el = $('venue');
+    el.dataset.size = sizeFor(name);
+    el.textContent = '';
+    // one tube keeps buzzing: the third-from-last letter
+    let idx = -1;
+    for (let i = name.length - 3; i >= 0; i--) { if (/[a-z]/i.test(name[i])) { idx = i; break; } }
+    if (idx > 0) {
+      el.append(name.slice(0, idx));
+      const b = document.createElement('span'); b.className = 'buzz'; b.textContent = name[idx];
+      el.append(b, name.slice(idx + 1));
+    } else {
+      el.textContent = name;
+    }
+    if (key !== lastNowKey) {
+      lastNowKey = key;
+      if (!reduced) { el.classList.remove('strike'); void el.offsetWidth; el.classList.add('strike'); }
+    }
+  }
+
+  function splitTime(t) {
+    const m = /^(.*?)(\s*)(am|pm|a\.m\.|p\.m\.)$/i.exec(t.trim());
+    return m ? [m[1], m[3].replace(/\./g, '').toUpperCase()] : [t, ''];
+  }
+
+  let current = null; // the stop the buttons point at
+
+  function render() {
+    const { now, next, earlier } = split(data.stops);
+    const hero = now || next;
+    current = hero;
+
+    // sign
+    if (now) $('sign').textContent = 'Here now';
+    else if (next && next.time) $('sign').textContent = 'Starts ' + next.time;
+    else $('sign').textContent = 'Starting soon';
+
+    // venue
+    const name = hero && !unknown(hero.venue) ? hero.venue : 'Soon';
+    setVenue(name, venueKey(hero));
+
+    // address + meta
+    const hasAddr = !!(hero && hero.address);
+    $('where').hidden = !(hasAddr || (hero && (hero.area || (now && hero.time))));
+    $('addr').hidden = !hasAddr;
+    $('addr').textContent = hasAddr ? hero.address : '';
+    const meta = [];
+    if (hero && hero.area) meta.push(hero.area);
+    if (now && now.time) meta.push('here since ' + now.time);
+    $('meta').textContent = meta.join(' · ');
+    $('meta').hidden = !meta.length;
+
+    // note
+    $('note').textContent = hero ? hero.note : '';
+    $('note').hidden = !(hero && hero.note);
+
+    // directions
+    $('go').hidden = !hasAddr;
+    if (hasAddr) {
+      const addr = fullAddress(hero.address);
+      const dest = unknown(hero.venue) ? addr : hero.venue + ', ' + addr;
+      $('go-maps').href = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(dest);
+      $('go-uber').href = 'https://m.uber.com/ul/?action=setPickup&pickup=my_location'
+        + '&dropoff%5Bformatted_address%5D=' + encodeURIComponent(addr)
+        + (unknown(hero.venue) ? '' : '&dropoff%5Bnickname%5D=' + encodeURIComponent(hero.venue));
+    }
+
+    // up next (only when we're already somewhere)
+    const showNext = !!(now && next);
+    $('next-sec').hidden = !showNext;
+    if (showNext) {
+      const [hm, ap] = splitTime(next.time || '');
+      const clock = $('next-clock');
+      clock.textContent = hm || 'Soon';
+      if (ap) { const s = document.createElement('small'); s.textContent = ap; clock.append(s); }
+      const p = $('next-text');
+      p.textContent = unknown(next.venue) ? 'Moving around then.' : next.venue + (next.area ? ', ' + next.area : '');
+      const sub = document.createElement('span');
+      sub.textContent = next.note || (unknown(next.venue) ? 'Spot TBD. Pitch one in the chat.' : (next.address || ''));
+      if (sub.textContent) p.append(sub);
+    }
+
+    // earlier
+    $('earlier-sec').hidden = !earlier.length;
+    const ol = $('earlier');
+    ol.textContent = '';
+    earlier.forEach((s) => {
+      const li = document.createElement('li');
+      const t = document.createElement('time'); t.textContent = s.time;
+      const g = document.createElement('span'); g.className = 'glass'; g.textContent = s.venue;
+      if (s.area) { const h = document.createElement('span'); h.className = 'hood'; h.textContent = s.area; g.append(h); }
+      li.append(t, g);
+      ol.append(li);
+    });
+
+    renderCounts();
+    renderChat();
+    // hook for decorative scripts: detail = { now, next, earlier, key }
+    document.dispatchEvent(new CustomEvent('dad:render', { detail: { now, next, earlier, key: venueKey(hero) } }));
+  }
+
+  function renderFresh() {
+    const el = $('fresh');
+    const txt = $('fresh-text');
+    if (!lastSync) { el.classList.add('stale'); txt.textContent = 'Connecting…'; return; }
+    const s = Math.round((Date.now() - lastSync) / 1000);
+    const stale = s > 90;
+    el.classList.toggle('stale', stale);
+    if (stale) txt.textContent = 'Reconnecting… last update ' + Math.round(s / 60) + ' min ago';
+    else txt.textContent = 'Live · updated ' + (s < 10 ? 'just now' : s < 60 ? s + 's ago' : '1 min ago');
+  }
+
+  // tap address to copy it (handy for Lyft)
+  $('addr').addEventListener('click', async () => {
+    if (!current || !current.address) return;
+    const text = fullAddress(current.address);
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+      const r = document.createRange(); r.selectNodeContents($('addr'));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    }
+    if (ok) {
+      const tag = document.createElement('span'); tag.className = 'copied'; tag.textContent = 'Copied';
+      $('addr').append(tag);
+      setTimeout(() => tag.remove(), 1600);
+    }
+  });
+
+  /* ---------------- chat + check-ins over ntfy ---------------- */
+
+  const messages = new Map(); // id -> {id, time, name, text}
+  const pulses = new Map();   // client -> {s, v, t}
+  const mine = new Set(store.get('mine', []));
+  let shown = CONFIG.pageSize;
+
+  function onEvent(m) {
+    if (!m || m.event !== 'message') return;
+    if (m.topic === CONFIG.pulseTopic) {
+      try {
+        const p = JSON.parse(m.message);
+        if (!p || !p.c) return;
+        const prev = pulses.get(p.c);
+        if (!prev || prev.t <= m.time) pulses.set(p.c, { s: p.s, v: p.v, t: m.time });
+        renderCounts();
+      } catch (e) {}
+      return;
+    }
+    if (m.topic === CONFIG.chatTopic && !messages.has(m.id)) {
+      messages.set(m.id, {
+        id: m.id,
+        time: m.time,
+        name: String(m.title || 'Someone').slice(0, 24),
+        text: String(m.message || '').slice(0, 280),
+      });
+      scheduleChat();
+    }
+  }
+
+  let chatTimer = 0;
+  function scheduleChat() { if (!chatTimer) chatTimer = setTimeout(() => { chatTimer = 0; renderChat(); }, 120); }
+
+  const fmtTime = (sec) => {
+    try { return new Date(sec * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Denver' }); }
+    catch (e) { return ''; }
+  };
+
+  function isHidden(m) {
+    const h = (data.hide || []).map((x) => String(x).trim().toLowerCase()).filter(Boolean);
+    return h.includes(String(m.id).toLowerCase()) || h.includes(m.name.trim().toLowerCase());
+  }
+
+  function renderChat() {
+    const list = $('chat');
+    const all = [...messages.values()].filter((m) => !isHidden(m)).sort((a, b) => b.time - a.time);
+    const items = pending.concat(all).slice(0, shown);
+    list.textContent = '';
+    items.forEach((m) => {
+      const li = document.createElement('li');
+      li.className = 'msg' + (mine.has(m.id) || m.pending ? ' me' : '') + (m.pending ? ' pending' : '');
+      const who = document.createElement('span'); who.className = 'who';
+      const nm = document.createElement('span'); nm.textContent = m.name;
+      const tm = document.createElement('time'); tm.textContent = m.pending ? 'sending…' : fmtTime(m.time);
+      who.append(nm, tm);
+      if (isHost && !m.pending) {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'hostid'; b.textContent = 'ID ' + m.id;
+        b.addEventListener('click', () => { navigator.clipboard && navigator.clipboard.writeText(m.id).then(() => { b.textContent = 'Copied'; }, () => {}); });
+        who.append(b);
+      }
+      const bubble = document.createElement('span'); bubble.className = 'bubble'; bubble.textContent = m.text;
+      li.append(who, bubble);
+      list.append(li);
+    });
+    $('chat-empty').hidden = items.length > 0;
+    $('chat-older').hidden = all.length + pending.length <= shown;
+  }
+  $('chat-older').addEventListener('click', () => { shown += CONFIG.pageSize; renderChat(); });
+
+  // subscribe to both topics over one Server-Sent Events stream
+  let es = null;
+  function connect() {
+    if (es) { try { es.close(); } catch (e) {} }
+    es = new EventSource(CONFIG.ntfy + '/' + CONFIG.chatTopic + ',' + CONFIG.pulseTopic + '/sse?since=all');
+    es.onmessage = (ev) => { try { onEvent(JSON.parse(ev.data)); } catch (e) {} };
+  }
+
+  async function publish(topic, message, title) {
+    if (DEMO) return { id: 'demo' + Date.now(), time: Math.floor(Date.now() / 1000), event: 'message', topic, message, title };
+    const body = { topic, message };
+    if (title) body.title = title;
+    const r = await fetch(CONFIG.ntfy + '/', { method: 'POST', body: JSON.stringify(body) });
+    if (!r.ok) { const err = new Error('publish ' + r.status); err.status = r.status; throw err; }
+    return r.json();
+  }
+
+  // compose
+  const pending = [];
+  const nameEl = $('chat-name');
+  const textEl = $('chat-text');
+  nameEl.value = store.get('name', '');
+  let lastSend = 0;
+  function showErr(msg) { const e = $('chat-err'); e.textContent = msg; e.hidden = !msg; }
+
+  $('compose').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = nameEl.value.trim().slice(0, 24);
+    const text = textEl.value.trim().slice(0, 280);
+    if (!name) { showErr('Add your name first.'); nameEl.focus(); return; }
+    if (!text) return;
+    if (Date.now() - lastSend < 2500) { showErr('One sec between messages.'); return; }
+    lastSend = Date.now();
+    showErr('');
+    store.set('name', name);
+    const temp = { id: 'tmp' + Date.now(), time: Date.now() / 1000, name, text, pending: true };
+    pending.unshift(temp);
+    textEl.value = '';
+    renderChat();
+    try {
+      const res = await publish(CONFIG.chatTopic, text, name);
+      mine.add(res.id);
+      store.set('mine', [...mine].slice(-200));
+      onEvent(res.event ? res : Object.assign({ event: 'message' }, res));
+    } catch (err) {
+      textEl.value = text;
+      showErr(err.status === 429
+        ? 'Chat is maxed out on this network. Switch off Wi-Fi and try again.'
+        : 'Couldn’t send. Check your connection and try again.');
+    } finally {
+      pending.splice(pending.indexOf(temp), 1);
+      renderChat();
+    }
+  });
+
+  // check-ins
+  const myPulse = () => store.get('pulse', null);
+  function counts() {
+    const key = venueKey(current);
+    let here = 0, way = 0;
+    pulses.forEach((p, c) => {
+      if (c === clientId) return;
+      if (p.v !== key) return;
+      if (p.s === 'here') here++; else if (p.s === 'way') way++;
+    });
+    const me = myPulse();
+    if (me && me.v === key) { if (me.s === 'here') here++; else if (me.s === 'way') way++; }
+    return { here, way, me: me && me.v === key ? me.s : null };
+  }
+  function renderCounts() {
+    const c = counts();
+    $('n-here').textContent = c.here;
+    $('n-way').textContent = c.way;
+    document.querySelectorAll('.check').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === c.me)));
+  }
+  document.querySelectorAll('.check').forEach((b) => b.addEventListener('click', () => {
+    const key = venueKey(current);
+    const prev = counts().me;
+    const s = prev === b.dataset.k ? 'off' : b.dataset.k;
+    store.set('pulse', { s, v: key });
+    renderCounts();
+    publish(CONFIG.pulseTopic, JSON.stringify({ c: clientId, s, v: key })).catch(() => {});
+  }));
+
+  /* ---------------- boot ---------------- */
+
+  if (isHost) $('host-tools').hidden = false;
+
+  if (DEMO) {
+    const t = Math.floor(Date.now() / 1000);
+    data = { hide: [], stops: [
+      { time: '9:00 PM', venue: 'Larimer Beer Hall', address: '2012 Larimer St', area: 'Ballpark', note: '', status: '' },
+      { time: '10:15 PM', venue: 'Ophelia’s Electric Soapbox', address: '1215 20th St', area: 'Ballpark', note: 'Downstairs. We’re by the stage.', status: '' },
+      { time: '11:30 PM', venue: 'TBD', address: '', area: '', note: 'Ideas in the chat.', status: 'next' },
+    ] };
+    render();
+    [['Maya', 'leaving the Hilton reception now, 10 min', -900], ['Jordan', 'is there a cover?', -700],
+     ['Sam', 'someone save me a spot by the stage', -400], ['Priya', 'who’s in for Pete’s Kitchen after', -200], ['Alex', '🫡', -60]]
+      .forEach(([n, m, dt], i) => onEvent({ id: 'd' + i, time: t + dt, event: 'message', topic: CONFIG.chatTopic, title: n, message: m }));
+    const key = venueKey(current);
+    for (let i = 0; i < 32; i++) onEvent({ id: 'p' + i, time: t - 100 + i, event: 'message', topic: CONFIG.pulseTopic, message: JSON.stringify({ c: 'demo' + i, s: i < 23 ? 'here' : 'way', v: key }) });
+    lastSync = Date.now();
+    renderFresh();
+    setInterval(() => { lastSync = Date.now(); renderFresh(); }, 5000);
+  } else {
+    render();
+    load();
+    connect();
+    setInterval(() => { if (!document.hidden) load(); }, CONFIG.pollMs);
+    setInterval(renderFresh, 5000);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) { load(); if (!es || es.readyState === 2) connect(); }
+    });
+  }
+})();
+</script>
+</body>
+</html>
