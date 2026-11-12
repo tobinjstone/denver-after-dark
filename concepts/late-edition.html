@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Denver After Dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=UnifrakturCook:wght@700&display=swap">
+<style>
+/* Layout: a tabloid front page. One column on phones; on wide screens a 760px sheet whose
+   lower fold splits into news (left) and letters from the floor (right).
+   Color: dim grey newsprint (not white, not cream), press-black ink, one loud tabloid red.
+   Type: UnifrakturCook nameplate, Anton for screamers and heads, Newsreader for text. */
+:root{
+  color-scheme: light;
+  --paper:#cdcac2;
+  --paper-deep:#bfbbb1;
+  --ink:#171614;
+  --ink-soft:#46433e;
+  --red:#c8171e;
+  --red-ink:#9a0f14;
+  --on-red:#f3efe6;
+  --on-ink:#dcd9d1;
+  --f-plate:"UnifrakturCook","Old English Text MT","Goudy Text MT",serif;
+  --f-scream:"Anton","Impact","Haettenschweiler","Arial Narrow Bold",sans-serif;
+  --f-text:"Newsreader","Georgia","Times New Roman",serif;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .16 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{
+  margin:0;
+  background:var(--paper) var(--grain);
+  color:var(--ink);
+  font-family:var(--f-text);
+  font-size:17px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:max(14px, env(safe-area-inset-top, 0px)) max(32px, env(safe-area-inset-bottom, 0px));
+}
+.sheet{max-width:760px;margin:0 auto}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Masthead */
+.plate{
+  margin:0;
+  font-family:var(--f-plate);
+  font-weight:700;
+  font-size:clamp(34px, 10.5vw, 92px);
+  line-height:1.05;
+  text-align:center;
+  white-space:nowrap;
+  overflow-x:clip;
+}
+.plate > span{display:inline-block}
+.dateline{
+  margin:6px 0 0;
+  padding:5px 0 4px;
+  border-top:4px double var(--ink);
+  border-bottom:1px solid var(--ink);
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 12px;
+  font-variant:small-caps;font-weight:600;font-size:14px;letter-spacing:.03em;line-height:1.35;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Extra bar */
+.extra{
+  margin-top:10px;
+  background:var(--red);color:var(--on-red);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:4px 12px 4px 10px;
+}
+.extra-word{font-family:var(--f-scream);font-size:46px;line-height:1.05;text-transform:uppercase;letter-spacing:.02em}
+.extra-stamp{display:flex;flex-direction:column;align-items:flex-end;font-weight:600;font-size:15px;line-height:1.25;font-variant-numeric:tabular-nums;text-align:right}
+.extra-stamp b{font-weight:700}
+
+/* Headline */
+.headline{margin:12px 0 0;overflow-x:clip;padding-top:.02em}
+.hl{
+  display:block;
+  font-family:var(--f-scream);font-weight:400;
+  text-transform:uppercase;
+  line-height:.9;
+  white-space:nowrap;
+  transform-origin:50% 60%;
+}
+.hl > span{display:inline-block}
+.hl-1{font-size:clamp(36px, 11vw, 104px)}
+.hl-2{font-size:clamp(54px, 20vw, 200px);margin-top:.03em}
+.deck{
+  margin:12px 0 0;
+  font-weight:600;font-size:22px;line-height:1.18;
+  text-wrap:balance;
+}
+
+/* The where */
+.where{
+  margin-top:14px;padding-top:10px;
+  border-top:3px solid var(--ink);
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 14px;
+}
+.venue{margin:0;font-weight:700;font-size:19px;line-height:1.2}
+.venue span{display:block;font-weight:400;font-size:17px}
+.since{margin:0;font-style:italic;font-size:16px;font-variant-numeric:tabular-nums}
+.pull{
+  margin:14px 0 0;padding:10px 0;
+  border-block:1px solid var(--ink);
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;
+}
+.pull p{margin:0;font-style:italic;font-weight:600;font-size:24px;line-height:1.15}
+.pull cite{font-style:normal;font-variant:small-caps;font-weight:600;font-size:15px;letter-spacing:.03em}
+.pull cite::before{content:"\2014\00a0"}
+
+/* Lower fold */
+.fold{display:grid;gap:22px;margin-top:20px}
+.col{display:grid;gap:22px;align-content:start;min-width:0}
+
+/* Classifieds: getting there */
+.ride{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ad{
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 10px;
+  min-height:64px;padding:8px 12px;
+  border:4px double var(--ink);
+  text-decoration:none;color:var(--ink);background:transparent;
+}
+.ad-title{font-family:var(--f-scream);font-size:27px;line-height:1.05;text-transform:uppercase;letter-spacing:.01em}
+.ad-sub{grid-column:1;font-size:14px;line-height:1.25;color:var(--ink-soft)}
+.ad-arrow{grid-column:2;grid-row:1 / span 2;font-family:var(--f-scream);font-size:26px}
+.ad-main{grid-column:1 / -1;background:var(--ink);color:var(--on-ink);border:4px solid var(--ink);min-height:72px}
+.ad-main .ad-title{font-size:34px}
+.ad-main .ad-sub{color:var(--on-ink)}
+.ad:hover .ad-arrow{transform:translateX(3px)}
+.ad-arrow{transition:transform .15s}
+
+/* Boxes */
+.box{border:2px solid var(--ink)}
+.boxhead{
+  margin:0;padding:3px 10px 2px;
+  background:var(--ink);color:var(--on-ink);
+  font-family:var(--f-scream);font-weight:400;font-size:18px;line-height:1.3;
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.box-body{padding:10px 12px 12px}
+.next .box-body{
+  background-image:radial-gradient(color-mix(in srgb, var(--ink) 16%, transparent) .9px, transparent 1.3px);
+  background-size:6px 6px;
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;
+}
+.next-time{margin:0;font-family:var(--f-scream);font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.next-dest{margin:0;font-size:17px;line-height:1.3;max-width:24ch}
+.att-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--ink)}
+.att-grid > div{padding:8px 12px 10px;display:flex;flex-direction:column}
+.att-grid > div + div{border-left:1px solid var(--ink)}
+.num{font-family:var(--f-scream);font-size:52px;line-height:1;font-variant-numeric:tabular-nums}
+.lbl{font-variant:small-caps;font-weight:600;font-size:15px;letter-spacing:.03em}
+.att-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px 12px}
+.att-btns button{
+  min-height:48px;padding:6px 10px;
+  font:inherit;font-family:var(--f-scream);font-size:21px;text-transform:uppercase;letter-spacing:.02em;
+  color:var(--ink);background:transparent;border:2px solid var(--ink);cursor:pointer;
+}
+.att-btns button[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.att-btns button[aria-pressed="true"]::after{content:" \2713"}
+
+/* Section heads */
+.sechead{
+  margin:0 0 6px;padding-top:6px;
+  border-top:6px solid var(--ink);
+  font-family:var(--f-scream);font-weight:400;font-size:30px;line-height:1.05;text-transform:uppercase;
+}
+
+/* Earlier editions */
+.ed{list-style:none;margin:0;padding:0}
+.ed li{
+  display:grid;grid-template-columns:5.4em 1fr;gap:10px;align-items:baseline;
+  padding:7px 0;border-bottom:1px solid color-mix(in srgb, var(--ink) 40%, transparent);
+}
+.ed time{font-weight:700;font-variant-numeric:tabular-nums;font-size:16px}
+.ed b{font-weight:700}
+.ed .nb{color:var(--ink-soft)}
+.ed .cur{color:var(--ink)}
+.ed .cur em{display:block;font-style:normal;font-variant:small-caps;font-weight:700;font-size:14px;letter-spacing:.04em;color:var(--red-ink)}
+
+/* From the floor */
+.letters{list-style:none;margin:0;padding:0}
+.letters li{padding:9px 0 8px;border-bottom:1px dotted var(--ink-soft)}
+.letters p{margin:0;font-size:18px;line-height:1.3}
+.letters cite{display:block;margin-top:2px;font-style:normal;font-variant:small-caps;font-weight:600;font-size:15px;letter-spacing:.03em;color:var(--ink-soft)}
+.letters cite::before{content:"\2014\00a0"}
+.letters .host p{font-weight:700}
+.letters .host cite{color:var(--red-ink)}
+.post{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.post input{
+  width:100%;min-height:46px;padding:8px 10px;
+  font:inherit;font-size:17px;color:var(--ink);
+  background:color-mix(in srgb, var(--paper-deep) 70%, transparent);
+  border:0;border-bottom:2px solid var(--ink);border-radius:0;
+}
+.post input::placeholder{color:var(--ink-soft);opacity:1;font-style:italic}
+.post-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+.post button{
+  min-height:46px;padding:0 18px;
+  font-family:var(--f-scream);font-size:21px;text-transform:uppercase;letter-spacing:.03em;
+  color:var(--on-red);background:var(--red);border:0;cursor:pointer;
+}
+
+/* Footer */
+.foot{margin-top:26px;display:grid;gap:10px}
+.rsvp{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:64px;padding:10px 14px;
+  background:var(--ink);color:var(--on-ink);text-decoration:none;
+}
+.rsvp span{display:flex;flex-direction:column;line-height:1.1}
+.rsvp small{font-variant:small-caps;font-weight:600;font-size:15px;letter-spacing:.04em}
+.rsvp b{font-family:var(--f-scream);font-weight:400;font-size:30px;text-transform:uppercase}
+.rsvp i{font-style:normal;font-family:var(--f-scream);font-size:28px}
+.colophon{margin:0;text-align:center;font-variant:small-caps;font-size:14px;letter-spacing:.04em;color:var(--ink-soft)}
+
+@media (min-width:720px){
+  .fold{grid-template-columns:1fr 1fr;gap:0}
+  .fold > .col:first-child{padding-right:20px}
+  .fold > .col + .col{padding-left:20px;border-left:1px solid var(--ink)}
+  .deck{font-size:26px}
+  .pull p{font-size:28px}
+}
+
+/* Signature moment: the front page hits the street */
+@media (prefers-reduced-motion:no-preference){
+  .slam .hl{animation:slam .55s cubic-bezier(.18,.9,.3,1.15) both}
+  .slam .hl-2{animation-delay:.16s}
+  .slam .extra{animation:stamp .4s .42s ease-out both}
+}
+@keyframes slam{
+  0%{transform:scale(1.3) rotate(-1.8deg);filter:blur(2px)}
+  65%{transform:scale(.982) rotate(.2deg);filter:none}
+  100%{transform:none;filter:none}
+}
+@keyframes stamp{
+  0%{transform:scaleX(1.04)}
+  40%{transform:scaleX(.99)}
+  100%{transform:none}
+}
+</style>
+</head>
+<body>
+<main class="sheet">
+
+  <header>
+    <h1 class="plate" data-fit data-max="92"><span>Denver After Dark</span></h1>
+    <p class="dateline">
+      <span>Thursday, Nov. 12, 2026</span>
+      <span>Late Edition</span>
+      <span><time datetime="2026-11-12T23:42-07:00">11:42 p.m.</time></span>
+      <span>Price: one round</span>
+    </p>
+  </header>
+
+  <div class="extra">
+    <span class="extra-word">Extra</span>
+    <span class="extra-stamp"><span>Updated <b>11:38 p.m.</b></span><span id="ago">4 min ago</span></span>
+  </div>
+
+  <h2 class="headline" aria-label="Party moves to Ophelia’s">
+    <span class="hl hl-1" data-fit data-max="104" aria-hidden="true"><span>Party moves to</span></span>
+    <span class="hl hl-2" data-fit data-max="200" aria-hidden="true"><span>Ophelia’s</span></span>
+  </h2>
+  <p class="deck">Crowd of 41 holds the stage; sources expect another move around 12:30.</p>
+
+  <div class="where">
+    <p class="venue">Ophelia’s Electric Soapbox<span>1215 20th St, Ballpark</span></p>
+    <p class="since">Here since 11:10 p.m.</p>
+  </div>
+
+  <blockquote class="pull">
+    <p>“Downstairs. We’re by the stage.”</p>
+    <cite>The host</cite>
+  </blockquote>
+
+  <div class="fold">
+    <div class="col">
+
+      <nav class="ride" aria-label="Get to Ophelia’s">
+        <a class="ad ad-main" href="https://www.google.com/maps/dir/?api=1&amp;destination=Ophelia%27s%20Electric%20Soapbox%2C%201215%2020th%20St%2C%20Denver%2C%20CO" target="_blank" rel="noopener">
+          <span class="ad-title">Directions</span>
+          <span class="ad-sub">Google Maps to 1215 20th St</span>
+          <span class="ad-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="ad" href="https://m.uber.com/ul/?action=setPickup&amp;pickup=my_location&amp;dropoff%5Bformatted_address%5D=1215%2020th%20St%2C%20Denver%2C%20CO&amp;dropoff%5Bnickname%5D=Ophelia%27s" target="_blank" rel="noopener">
+          <span class="ad-title">Uber</span>
+          <span class="ad-sub">Drop-off preset</span>
+          <span class="ad-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="ad" href="https://ride.lyft.com/" target="_blank" rel="noopener">
+          <span class="ad-title">Lyft</span>
+          <span class="ad-sub">Open Lyft</span>
+          <span class="ad-arrow" aria-hidden="true">→</span>
+        </a>
+      </nav>
+
+      <section class="box next" aria-labelledby="next-h">
+        <h3 class="boxhead" id="next-h">Next edition</h3>
+        <div class="box-body">
+          <p class="next-time"><time datetime="2026-11-13T00:30-07:00">~12:30 a.m.</time></p>
+          <p class="next-dest">Destination TBD. Ideas welcome <a href="#floor">from the floor</a>.</p>
+        </div>
+      </section>
+
+      <section class="box att" aria-labelledby="att-h">
+        <h3 class="boxhead" id="att-h">Attendance</h3>
+        <div class="att-grid">
+          <div><span class="num" id="n-here">41</span><span class="lbl">Quorum present</span></div>
+          <div><span class="num" id="n-way">12</span><span class="lbl">En route</span></div>
+        </div>
+        <div class="att-btns">
+          <button type="button" id="b-here" aria-pressed="false">I’m here</button>
+          <button type="button" id="b-way" aria-pressed="false">On my way</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="earlier-h">
+        <h3 class="sechead" id="earlier-h">Earlier editions</h3>
+        <ol class="ed">
+          <li><time datetime="2026-11-12T21:00-07:00">9:00 p.m.</time><span><b>Number Thirty Eight</b> <span class="nb">RiNo</span></span></li>
+          <li><time datetime="2026-11-12T22:05-07:00">10:05 p.m.</time><span><b>Improper City</b> <span class="nb">RiNo</span></span></li>
+          <li class="cur"><time datetime="2026-11-12T23:10-07:00">11:10 p.m.</time><span><b>Ophelia’s Electric Soapbox</b> <span class="nb">Ballpark</span><em>This edition</em></span></li>
+        </ol>
+      </section>
+
+    </div>
+    <div class="col">
+
+      <section id="floor" aria-labelledby="floor-h">
+        <h3 class="sechead" id="floor-h">From the floor</h3>
+        <ol class="letters" id="letters" aria-live="polite">
+          <li><p>leaving the Hilton reception now, 10 min</p><cite>Maya</cite></li>
+          <li><p>is there a cover?</p><cite>Jordan</cite></li>
+          <li class="host"><p>no cover, just come down</p><cite>The host</cite></li>
+          <li><p>someone save me a spot by the stage</p><cite>Sam</cite></li>
+          <li><p>who’s in for Pete’s Kitchen after</p><cite>Priya</cite></li>
+          <li><p>🫡</p><cite>Alex</cite></li>
+        </ol>
+        <form class="post" id="post" autocomplete="off">
+          <label class="vh" for="who">Your name</label>
+          <input id="who" name="who" type="text" maxlength="24" placeholder="Your name">
+          <div class="post-row">
+            <label class="vh" for="msg">Message</label>
+            <input id="msg" name="msg" type="text" maxlength="280" placeholder="Say something" required>
+            <button type="submit">Send</button>
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="foot">
+    <a class="rsvp" href="https://partiful.com/e/9ouN1xvHTecHt3R3sUa6" target="_blank" rel="noopener">
+      <span><small>Subscriptions</small><b>RSVP on Partiful</b></span>
+      <i aria-hidden="true">→</i>
+    </a>
+    <p class="colophon">Denver After Dark · Unofficial · Late Edition, Nov. 12, 2026</p>
+  </footer>
+
+</main>
+<script>
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Fit each nameplate/headline line to the column width, tabloid style.
+  function fit(){
+    var els = document.querySelectorAll('[data-fit]');
+    for (var i = 0; i < els.length; i++){
+      var el = els[i], inner = el.firstElementChild;
+      var max = parseFloat(el.getAttribute('data-max')) || 200;
+      el.style.fontSize = '100px';
+      var w = inner.offsetWidth, avail = el.clientWidth;
+      if (w > 0 && avail > 0){
+        el.style.fontSize = Math.min(max, Math.floor(1000 * avail / w) / 10 - 0.3) + 'px';
+      }
+    }
+  }
+  var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  ready.then(function(){
+    fit();
+    if (!reduce) document.body.classList.add('slam');
+  });
+  var t;
+  window.addEventListener('resize', function(){ clearTimeout(t); t = setTimeout(fit, 80); });
+
+  // Freshness
+  var ago = document.getElementById('ago'), mins = 4;
+  setInterval(function(){ mins++; ago.textContent = mins + ' min ago'; }, 60000);
+
+  // Attendance
+  var counts = { here: 41, way: 12 }, mine = null;
+  var nHere = document.getElementById('n-here'), nWay = document.getElementById('n-way');
+  var bHere = document.getElementById('b-here'), bWay = document.getElementById('b-way');
+  function render(){
+    nHere.textContent = counts.here + (mine === 'here' ? 1 : 0);
+    nWay.textContent = counts.way + (mine === 'way' ? 1 : 0);
+    bHere.setAttribute('aria-pressed', mine === 'here');
+    bWay.setAttribute('aria-pressed', mine === 'way');
+  }
+  bHere.addEventListener('click', function(){ mine = mine === 'here' ? null : 'here'; render(); });
+  bWay.addEventListener('click', function(){ mine = mine === 'way' ? null : 'way'; render(); });
+
+  // From the floor
+  var form = document.getElementById('post'), list = document.getElementById('letters');
+  var who = document.getElementById('who'), msg = document.getElementById('msg');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var text = msg.value.trim();
+    if (!text) return;
+    var li = document.createElement('li');
+    var p = document.createElement('p'); p.textContent = text;
+    var c = document.createElement('cite'); c.textContent = who.value.trim() || 'A reader';
+    li.appendChild(p); li.appendChild(c); list.appendChild(li);
+    msg.value = ''; msg.focus();
+  });
+})();
+</script>
+</body>
+</html>
