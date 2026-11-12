@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Denver After Dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Martian+Mono:wdth,wght@75..112.5,400..800&display=swap">
+<style>
+/* Design plan
+   Layout: one station board housing. Sign + clock, big split-flap row for the current stop,
+   ticket-stub ride links, crowd counters, a departures grid, passenger messages.
+   Phone: single column. Desktop (>=960px): a wide board wall, now + crowd left, departures + messages right.
+   Color: black housing, dark flap tiles, warm-white characters, amber for live state, cream ticket stock,
+   one red neon note for the station sign.
+   Type: Martian Mono (condensed axis) for every board character; Barlow Semi Condensed for chat text. */
+:root{
+  --housing:#0c0c0b;
+  --panel:#141412;
+  --tile-top:#262521;
+  --tile-bot:#1d1c19;
+  --split:#050504;
+  --char:#f2e8d2;
+  --amber:#ffb12e;
+  --amber-deep:#6b4a12;
+  --dim:#958c78;
+  --rule:#2c2a25;
+  --ticket:#efe2c0;
+  --ink:#1b1812;
+  --sign:#ff5b3f;
+  --flap:"Martian Mono","JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --text:"Barlow Semi Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --d:36ms;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--housing)}
+body{
+  margin:0;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 2px, transparent 2px 6px),
+    var(--housing);
+  color:var(--char);
+  font-family:var(--flap);
+  font-stretch:75%;
+  -webkit-font-smoothing:antialiased;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+.board{
+  max-width:600px;
+  margin:0 auto;
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+  display:grid;
+  gap:22px;
+  grid-template-areas:"sign" "now" "crowd" "dep" "msg" "foot";
+}
+
+/* Station sign + clock */
+.sign{grid-area:sign;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.sign h1{
+  margin:0;font-family:var(--text);font-weight:700;text-transform:uppercase;
+  font-size:clamp(22px,6.6vw,30px);letter-spacing:.06em;line-height:.95;color:var(--sign);
+  text-shadow:0 0 6px rgba(255,91,63,.55),0 0 18px rgba(255,91,63,.25);
+}
+.sign p{margin:6px 0 0;font-family:var(--text);font-weight:600;text-transform:uppercase;letter-spacing:.22em;font-size:11px;color:var(--sign);opacity:.8}
+.clock{text-align:right;font-variant-numeric:tabular-nums;flex:none}
+.clock .time{font-size:24px;font-weight:700;color:var(--amber);line-height:1}
+.clock .colon{animation:blink 2s steps(1) infinite}
+.clock .ampm{font-size:12px;margin-left:3px;font-weight:600}
+.clock .date{display:block;margin-top:6px;font-size:11px;letter-spacing:.12em;color:var(--dim)}
+
+/* Now boarding */
+.now{grid-area:now;display:grid;gap:14px}
+.plate{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+}
+.plate .live{display:inline-flex;align-items:center;gap:8px;color:var(--amber)}
+.lamp{width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:blink 1.4s steps(1) infinite}
+.plate .upd{color:var(--dim);font-weight:500;letter-spacing:.08em}
+
+.flaps{
+  display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:clamp(3px,1vw,6px);
+  width:100%;padding:10px;margin:0;border:0;border-radius:6px;cursor:pointer;
+  background:linear-gradient(#0a0a09,#121210);
+  box-shadow:inset 0 0 0 1px #24231f, inset 0 8px 18px rgba(0,0,0,.7);
+}
+.flap{
+  position:relative;aspect-ratio:5/7;perspective:420px;border-radius:3px;background:var(--split);
+  font-family:var(--flap);font-stretch:75%;font-weight:700;color:var(--char);
+  font-size:clamp(25px,8.8vw,50px);
+}
+.flap .h{
+  position:absolute;inset:0;display:grid;place-items:center;line-height:1;border-radius:3px;
+  background:linear-gradient(to bottom,var(--tile-top) 0 50%,var(--tile-bot) 50% 100%);
+  backface-visibility:hidden;
+}
+.flap .t,.flap .ft{clip-path:inset(0 0 50% 0)}
+.flap .b,.flap .fb{clip-path:inset(50% 0 0 0)}
+.flap .t,.flap .b{z-index:1}
+.flap .ft,.flap .fb{z-index:2}
+.flap .ft{transform:rotateX(-90deg)}
+.flap .fb{transform:rotateX(90deg)}
+.flap.go .ft{animation:ft var(--d) ease-in both}
+.flap.go .fb{animation:fb var(--d) ease-out var(--d) both}
+.flap::after{content:"";position:absolute;left:0;right:0;top:calc(50% - 1px);height:2px;background:var(--split);z-index:3}
+.flap::before{
+  content:"";position:absolute;left:-2px;right:-2px;top:calc(50% - 5px);height:10px;z-index:4;
+  background:linear-gradient(90deg,#45423a 0 3px,transparent 3px calc(100% - 3px),#45423a calc(100% - 3px));
+  border-radius:1px;
+}
+@keyframes ft{from{transform:rotateX(0)}to{transform:rotateX(-90deg)}}
+@keyframes fb{from{transform:rotateX(90deg)}to{transform:rotateX(0)}}
+
+.venue h2{margin:0;font-size:clamp(20px,5.6vw,26px);font-weight:700;line-height:1.15;text-wrap:balance;letter-spacing:.01em}
+.venue .addr{margin:6px 0 0;font-size:15px;color:var(--char)}
+.venue .addr span{color:var(--dim)}
+.venue .since{margin:4px 0 0;font-size:13px;color:var(--dim);letter-spacing:.04em}
+.note{
+  margin:0;padding:10px 12px;border-left:3px solid var(--amber);background:var(--panel);
+  font-family:var(--text);font-weight:600;font-size:18px;line-height:1.3;color:var(--char);
+}
+.note b{font-family:var(--flap);font-size:11px;letter-spacing:.14em;color:var(--amber);margin-right:8px;vertical-align:2px}
+
+.stubs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stub{
+  --n:7px;
+  display:flex;flex-direction:column;justify-content:center;gap:3px;min-height:60px;padding:10px 14px;
+  background:var(--ticket);color:var(--ink);text-decoration:none;border-radius:3px;
+  -webkit-mask:
+    radial-gradient(circle var(--n) at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,
+    radial-gradient(circle var(--n) at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:
+    radial-gradient(circle var(--n) at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,
+    radial-gradient(circle var(--n) at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+  background-image:linear-gradient(90deg,transparent 0 calc(100% - 1px),rgba(27,24,18,.0) 0);
+  transition:transform .12s ease, background-color .12s ease;
+}
+.stub strong{font-size:15px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.stub span{font-family:var(--text);font-weight:600;font-size:13px;opacity:.7}
+.stub:first-child{background-color:var(--amber)}
+.stub:hover{transform:translateY(-1px)}
+.stub:active{transform:translateY(1px)}
+.stub:focus-visible{outline-offset:2px}
+
+.nextdep{
+  display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline;
+  padding:12px 14px;border:1px dashed #4a4436;border-radius:4px;
+}
+.nextdep .k{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.nextdep .v{font-size:18px;font-weight:700;color:var(--amber)}
+.nextdep .s{grid-column:1/-1;font-family:var(--text);font-weight:600;font-size:16px;color:var(--char)}
+
+/* Crowd */
+.crowd{grid-area:crowd;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.count{
+  display:grid;justify-items:start;gap:10px;padding:14px;min-height:44px;cursor:pointer;text-align:left;
+  background:var(--panel);color:var(--char);border:1px solid var(--rule);border-radius:5px;font:inherit;
+}
+.count .k{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.count .act{display:flex;align-items:center;gap:8px;font-family:var(--text);font-weight:700;font-size:17px;color:var(--amber)}
+.count .act i{width:14px;height:14px;border:2px solid var(--amber);border-radius:2px;flex:none}
+.count[aria-pressed="true"]{border-color:var(--amber);background:linear-gradient(var(--panel),#1d1709)}
+.count[aria-pressed="true"] .act i{background:var(--amber);box-shadow:inset 0 0 0 2px var(--panel)}
+.digits{display:inline-grid;grid-auto-flow:column;grid-auto-columns:38px;gap:3px}
+.digits .flap{font-size:34px}
+
+/* Departures */
+.dep{grid-area:dep}
+.title{
+  margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);
+}
+.title small{font-size:11px;font-weight:500;letter-spacing:.1em;color:var(--dim)}
+.deps{width:100%;border-collapse:separate;border-spacing:0 4px;font-variant-numeric:tabular-nums}
+.deps th{
+  text-align:left;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--dim);
+  padding:0 10px 4px;text-transform:uppercase;
+}
+.deps th:last-child,.deps td:last-child{text-align:right}
+.deps td{
+  padding:11px 10px;vertical-align:top;font-size:14px;font-weight:700;text-transform:uppercase;
+  background:linear-gradient(to bottom,var(--tile-top) 0 calc(50% - .5px),var(--split) calc(50% - .5px) calc(50% + .5px),var(--tile-bot) calc(50% + .5px));
+}
+.deps td:first-child{border-radius:3px 0 0 3px;white-space:nowrap;width:1%}
+.deps td:last-child{border-radius:0 3px 3px 0;white-space:nowrap;width:1%}
+.deps td small{display:block;margin-top:3px;font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--dim)}
+.deps .gone td{color:#a59c88}
+.deps .gone td:last-child{color:var(--dim)}
+.deps .live td{color:var(--char)}
+.deps .live td:last-child{color:var(--amber)}
+.deps .live td:last-child span{animation:blink 1.4s steps(1) infinite}
+.deps .tba td{color:var(--char)}
+.deps .tba td:last-child{color:var(--char)}
+
+/* Messages */
+.msg{grid-area:msg}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:2px;border-top:1px solid var(--rule)}
+.log li{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;padding:10px 2px;border-bottom:1px solid var(--rule)}
+.log .who{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--char)}
+.log time{font-size:11px;color:var(--dim);justify-self:end;font-variant-numeric:tabular-nums}
+.log p{grid-column:1/-1;margin:0;font-family:var(--text);font-weight:500;font-size:17px;line-height:1.3;color:#e3d9c3;overflow-wrap:anywhere}
+.log .host .who{color:var(--amber)}
+.log .host .who::after{content:"Host";margin-left:8px;padding:1px 5px;font-size:10px;letter-spacing:.12em;color:var(--ink);background:var(--amber);border-radius:2px;vertical-align:1px}
+.log .host p{color:var(--char);font-weight:600}
+.log .mine .who{color:var(--amber)}
+
+.compose{display:grid;grid-template-columns:minmax(0,5.6rem) minmax(0,1fr) auto;gap:6px;margin-top:12px}
+.compose input{
+  min-width:0;min-height:48px;padding:0 12px;border-radius:4px;border:1px solid var(--rule);
+  background:var(--tile-bot);color:var(--char);font-family:var(--text);font-weight:600;font-size:16px;
+}
+.compose input::placeholder{color:#7a725f}
+.compose input:focus-visible{outline:2px solid var(--amber);outline-offset:0;border-color:transparent}
+.compose button{
+  min-height:48px;padding:0 16px;border:0;border-radius:4px;cursor:pointer;
+  background:var(--amber);color:var(--ink);font-family:var(--flap);font-stretch:75%;font-weight:800;
+  font-size:14px;letter-spacing:.12em;text-transform:uppercase;
+}
+.compose button:active{transform:translateY(1px)}
+
+/* Footer */
+.foot{grid-area:foot;display:grid;gap:12px;padding-top:6px}
+.rsvp{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:0 16px;
+  border:1px solid var(--amber-deep);border-radius:4px;color:var(--char);text-decoration:none;
+  font-weight:800;font-size:14px;letter-spacing:.12em;text-transform:uppercase;background:var(--panel);
+}
+.rsvp span{color:var(--amber);font-size:18px}
+.rsvp:hover{border-color:var(--amber)}
+
+@keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.25}}
+
+@media (min-width:960px){
+  .board{
+    max-width:1140px;padding-block:28px 56px;gap:26px 40px;
+    grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);
+    grid-template-areas:"sign sign" "now dep" "crowd msg" "foot msg";
+    align-items:start;
+    border:1px solid #22211d;border-radius:8px;margin-block:24px;
+    background:linear-gradient(#10100f,#0b0b0a);
+    box-shadow:0 30px 60px rgba(0,0,0,.6), inset 0 1px 0 #26251f;
+    padding-left:36px;padding-right:36px;
+  }
+  .sign h1{font-size:34px}
+  .clock .time{font-size:30px}
+  .flap{font-size:52px}
+  .digits .flap{font-size:36px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .lamp,.clock .colon,.deps .live td:last-child span{animation:none}
+  .flap.go .ft,.flap.go .fb{animation:none}
+  .stub{transition:none}
+}
+</style>
+</head>
+<body>
+<main class="board">
+
+  <header class="sign">
+    <div>
+      <h1>Denver After Dark</h1>
+      <p>Travel by rideshare</p>
+    </div>
+    <div class="clock" aria-label="Board time">
+      <span class="time"><span id="hh">11</span><span class="colon">:</span><span id="mm">42</span><span class="ampm" id="ap">PM</span></span>
+      <span class="date">THU NOV 12</span>
+    </div>
+  </header>
+
+  <section class="now" aria-labelledby="venue-name">
+    <div class="plate">
+      <span class="live"><span class="lamp" aria-hidden="true"></span>Now boarding</span>
+      <span class="upd">Updated <span id="ago">4 min</span> ago</span>
+    </div>
+
+    <button class="flaps" id="flaps" type="button" aria-label="Ophelia's. Tap to flip the board again.">
+      <span class="flap" aria-hidden="true"><span class="h t">O</span><span class="h b">O</span><span class="h ft"></span><span class="h fb"></span></span>
+      <span class="flap" aria-hidden="true"><span class="h t">P</span><span class="h b">P</span><span class="h ft"></span><span class="h fb"></span></span>
+      <span class="flap" aria-hidden="true"><span class="h t">H</span><span class="h b">H</span><span class="h ft"></span><span class="h fb"></span></span>
+      <span class="flap" aria-hidden="true"><span class="h t">E</span><span class="h b">E</span><span class="h ft"></span><span class="h fb"></span></span>
+      <span class="flap" aria-hidden="true"><span class="h t">L</span><span class="h b">L</span><span class="h ft"></span><span class="h fb"></span></span>
+      <span class="flap" aria-hidden="true"><span class="h t">I</span><span class="h b">I</span><span class="h ft"></span><span class="h fb"></span></span>
+      <span class="flap" aria-hidden="true"><span class="h t">A</span><span class="h b">A</span><span class="h ft"></span><span class="h fb"></span></span>
+      <span class="flap" aria-hidden="true"><span class="h t">'</span><span class="h b">'</span><span class="h ft"></span><span class="h fb"></span></span>
+      <span class="flap" aria-hidden="true"><span class="h t">S</span><span class="h b">S</span><span class="h ft"></span><span class="h fb"></span></span>
+    </button>
+
+    <div class="venue">
+      <h2 id="venue-name">Ophelia's Electric Soapbox</h2>
+      <p class="addr">1215 20th St <span>· Ballpark</span></p>
+      <p class="since">Here since 11:10 PM</p>
+    </div>
+
+    <p class="note"><b>Host</b>Downstairs. We're by the stage.</p>
+
+    <nav class="stubs" aria-label="Get there">
+      <a class="stub" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;destination=Ophelia%27s%20Electric%20Soapbox%2C%201215%2020th%20St%2C%20Denver%2C%20CO"><strong>Directions</strong><span>Maps</span></a>
+      <a class="stub" target="_blank" rel="noopener" href="https://m.uber.com/ul/?action=setPickup&amp;pickup=my_location&amp;dropoff%5Bformatted_address%5D=1215%2020th%20St%2C%20Denver%2C%20CO&amp;dropoff%5Bnickname%5D=Ophelia%27s"><strong>Uber</strong><span>Ride there</span></a>
+      <a class="stub" target="_blank" rel="noopener" href="https://ride.lyft.com/"><strong>Lyft</strong><span>Ride there</span></a>
+    </nav>
+
+    <div class="nextdep">
+      <span class="k">Next departure</span>
+      <span class="v">~12:30 AM</span>
+      <span class="s">Destination TBA. Ideas in the messages.</span>
+    </div>
+  </section>
+
+  <section class="crowd" aria-label="Who's here">
+    <button class="count" id="here" type="button" aria-pressed="false">
+      <span class="k">On board</span>
+      <span class="digits" id="here-n" data-n="41" aria-hidden="true"></span>
+      <span class="act"><i aria-hidden="true"></i><span class="lbl">I'm here</span></span>
+    </button>
+    <button class="count" id="way" type="button" aria-pressed="false">
+      <span class="k">En route</span>
+      <span class="digits" id="way-n" data-n="12" aria-hidden="true"></span>
+      <span class="act"><i aria-hidden="true"></i><span class="lbl">On my way</span></span>
+    </button>
+  </section>
+
+  <section class="dep" aria-labelledby="dep-title">
+    <h2 class="title" id="dep-title">Departures <small>Thu Nov 12</small></h2>
+    <table class="deps">
+      <thead><tr><th scope="col">Time</th><th scope="col">Destination</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr class="gone"><td>9:00 PM</td><td>Number Thirty Eight<small>RiNo</small></td><td>Departed</td></tr>
+        <tr class="gone"><td>10:05 PM</td><td>Improper City<small>RiNo</small></td><td>Departed</td></tr>
+        <tr class="live"><td>11:10 PM</td><td>Ophelia's<small>Ballpark · 1215 20th St</small></td><td><span>Now boarding</span></td></tr>
+        <tr class="tba"><td>~12:30 AM</td><td>To be announced<small>Ideas in the messages</small></td><td>TBD</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="msg" aria-labelledby="msg-title">
+    <h2 class="title" id="msg-title">Passenger messages <small id="msg-count">6</small></h2>
+    <ol class="log" id="log" aria-live="polite">
+      <li><span class="who">Maya</span><time>11:24 PM</time><p>leaving the Hilton reception now, 10 min</p></li>
+      <li><span class="who">Jordan</span><time>11:27 PM</time><p>is there a cover?</p></li>
+      <li class="host"><span class="who">You</span><time>11:28 PM</time><p>no cover, just come down</p></li>
+      <li><span class="who">Sam</span><time>11:33 PM</time><p>someone save me a spot by the stage</p></li>
+      <li><span class="who">Priya</span><time>11:36 PM</time><p>who's in for Pete's Kitchen after</p></li>
+      <li><span class="who">Alex</span><time>11:40 PM</time><p>🫡</p></li>
+    </ol>
+    <form class="compose" id="compose" autocomplete="off">
+      <label class="sr" for="who">Your name</label>
+      <input id="who" name="who" maxlength="20" placeholder="Name" autocomplete="nickname">
+      <label class="sr" for="text">Message</label>
+      <input id="text" name="text" maxlength="240" placeholder="Message" required>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <footer class="foot">
+    <a class="rsvp" href="https://partiful.com/e/9ouN1xvHTecHt3R3sUa6" target="_blank" rel="noopener">RSVP on Partiful <span aria-hidden="true">↗</span></a>
+  </footer>
+
+</main>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&'";
+  const D = 36;           // ms per half-flap (matches --d)
+  const STEP = D * 2 + 6; // ms between characters
+
+  /* ---------- split-flap ---------- */
+  function tileHTML(ch){
+    return '<span class="flap"><span class="h t">'+ch+'</span><span class="h b">'+ch+'</span><span class="h ft"></span><span class="h fb"></span></span>';
+  }
+  function flipTo(tile, ch){
+    const [t, b, ft, fb] = tile.children;
+    if (reduce){ t.textContent = ch; b.textContent = ch; return; }
+    ft.textContent = t.textContent;
+    fb.textContent = ch;
+    t.textContent = ch;
+    tile.classList.remove('go'); void tile.offsetWidth; tile.classList.add('go');
+    clearTimeout(tile._b);
+    tile._b = setTimeout(() => { b.textContent = ch; }, D * 2);
+  }
+  function scramble(tiles, finals, opts){
+    const o = Object.assign({ stagger: 70, min: 6, extra: 5 }, opts);
+    const run = Symbol();
+    tiles.forEach((tile, i) => {
+      tile._run = run;
+      if (reduce){ flipTo(tile, finals[i]); return; }
+      const spins = o.min + Math.floor(Math.random() * o.extra) + Math.floor(i / 3);
+      let n = 0;
+      setTimeout(function tick(){
+        if (tile._run !== run) return;
+        if (n++ < spins){ flipTo(tile, POOL[Math.floor(Math.random() * POOL.length)]); setTimeout(tick, STEP); }
+        else flipTo(tile, finals[i]);
+      }, i * o.stagger);
+    });
+  }
+
+  const flaps = document.getElementById('flaps');
+  const venueTiles = [...flaps.querySelectorAll('.flap')];
+  const venueText = venueTiles.map(t => t.children[0].textContent);
+  flaps.addEventListener('click', () => scramble(venueTiles, venueText));
+
+  /* ---------- counters ---------- */
+  const counts = { here: 41, way: 12 };
+  function renderDigits(el, n, animate){
+    const s = String(n).padStart(2, '0');
+    let tiles = [...el.children];
+    if (tiles.length !== s.length){
+      el.innerHTML = s.split('').map(tileHTML).join('');
+      tiles = [...el.children];
+      return;
+    }
+    if (!animate){ tiles.forEach((t, i) => { t.children[0].textContent = s[i]; t.children[1].textContent = s[i]; }); return; }
+    const changed = tiles.filter((t, i) => t.children[0].textContent !== s[i]);
+    const idx = tiles.map((t, i) => i).filter(i => tiles[i].children[0].textContent !== s[i]);
+    scramble(changed, idx.map(i => s[i]), { stagger: 40, min: 3, extra: 3 });
+  }
+  const btn = { here: document.getElementById('here'), way: document.getElementById('way') };
+  const out = { here: document.getElementById('here-n'), way: document.getElementById('way-n') };
+  const label = { here: ["I'm here", "You're here"], way: ["On my way", "You're en route"] };
+  function setState(key, on){
+    const was = btn[key].getAttribute('aria-pressed') === 'true';
+    if (was === on) return;
+    counts[key] += on ? 1 : -1;
+    btn[key].setAttribute('aria-pressed', String(on));
+    btn[key].querySelector('.lbl').textContent = label[key][on ? 1 : 0];
+    btn[key].setAttribute('aria-label', label[key][on ? 1 : 0] + ', ' + counts[key] + (key === 'here' ? ' on board' : ' en route'));
+    renderDigits(out[key], counts[key], true);
+  }
+  ['here', 'way'].forEach(key => {
+    out[key].innerHTML = String(counts[key]).padStart(2, '0').split('').map(tileHTML).join('');
+    btn[key].setAttribute('aria-label', label[key][0] + ', ' + counts[key] + (key === 'here' ? ' on board' : ' en route'));
+    btn[key].addEventListener('click', () => {
+      const on = btn[key].getAttribute('aria-pressed') !== 'true';
+      setState(key, on);
+      if (on) setState(key === 'here' ? 'way' : 'here', false);
+    });
+  });
+
+  /* ---------- board clock + freshness (sample night starts at 11:42 PM) ---------- */
+  const start = Date.now();
+  const base = new Date(2026, 10, 12, 23, 42, 0);
+  const hh = document.getElementById('hh'), mm = document.getElementById('mm'), ap = document.getElementById('ap');
+  const ago = document.getElementById('ago');
+  function boardNow(){ return new Date(base.getTime() + (Date.now() - start)); }
+  function fmt(d){
+    let h = d.getHours(), m = d.getMinutes();
+    const p = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return { h: String(h), m: String(m).padStart(2, '0'), p };
+  }
+  function tick(){
+    const f = fmt(boardNow());
+    hh.textContent = f.h; mm.textContent = f.m; ap.textContent = f.p;
+    const mins = 4 + Math.floor((Date.now() - start) / 60000);
+    ago.textContent = mins + ' min';
+  }
+  setInterval(tick, 1000);
+
+  /* ---------- passenger messages ---------- */
+  const form = document.getElementById('compose');
+  const who = document.getElementById('who');
+  const text = document.getElementById('text');
+  const log = document.getElementById('log');
+  const count = document.getElementById('msg-count');
+  try { const saved = localStorage.getItem('dad-name'); if (saved) who.value = saved; } catch (e) {}
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const msg = text.value.trim();
+    if (!msg) return;
+    const name = who.value.trim() || 'Guest';
+    try { localStorage.setItem('dad-name', name); } catch (e) {}
+    const f = fmt(boardNow());
+    const li = document.createElement('li');
+    li.className = 'mine';
+    const w = document.createElement('span'); w.className = 'who'; w.textContent = name;
+    const t = document.createElement('time'); t.textContent = f.h + ':' + f.m + ' ' + f.p;
+    const p = document.createElement('p'); p.textContent = msg;
+    li.append(w, t, p);
+    log.append(li);
+    count.textContent = log.children.length;
+    text.value = '';
+    li.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  });
+
+  /* ---------- arrival flip ---------- */
+  if (!reduce) setTimeout(() => scramble(venueTiles, venueText), 250);
+})();
+</script>
+</body>
+</html>

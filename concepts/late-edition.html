@@ -58,12 +58,13 @@ a{color:inherit}
   overflow-x:clip;
 }
 .plate > span{display:inline-block}
+.dateline span:nth-child(even){text-align:right}
 .dateline{
   margin:6px 0 0;
   padding:5px 0 4px;
   border-top:4px double var(--ink);
   border-bottom:1px solid var(--ink);
-  display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 12px;
+  display:grid;grid-template-columns:1fr auto;gap:0 12px;
   font-variant:small-caps;font-weight:600;font-size:14px;letter-spacing:.03em;line-height:1.35;
   font-variant-numeric:tabular-nums;
 }
@@ -222,6 +223,9 @@ a{color:inherit}
 .rsvp i{font-style:normal;font-family:var(--f-scream);font-size:28px}
 .colophon{margin:0;text-align:center;font-variant:small-caps;font-size:14px;letter-spacing:.04em;color:var(--ink-soft)}
 
+@media (min-width:600px){
+  .dateline{display:flex;justify-content:space-between}
+}
 @media (min-width:720px){
   .fold{grid-template-columns:1fr 1fr;gap:0}
   .fold > .col:first-child{padding-right:20px}
@@ -252,11 +256,11 @@ a{color:inherit}
 <main class="sheet">
 
   <header>
-    <h1 class="plate" data-fit data-max="92"><span>Denver After Dark</span></h1>
+    <h1 class="plate" data-fit data-max="92" data-trim="0.96"><span>Denver After Dark</span></h1>
     <p class="dateline">
       <span>Thursday, Nov. 12, 2026</span>
-      <span>Late Edition</span>
       <span><time datetime="2026-11-12T23:42-07:00">11:42 p.m.</time></span>
+      <span>Late Edition</span>
       <span>Price: one round</span>
     </p>
   </header>
@@ -364,7 +368,7 @@ a{color:inherit}
       <span><small>Subscriptions</small><b>RSVP on Partiful</b></span>
       <i aria-hidden="true">→</i>
     </a>
-    <p class="colophon">Denver After Dark · Unofficial · Late Edition, Nov. 12, 2026</p>
+    <p class="colophon">Denver After Dark · Unofficial · Late Edition</p>
   </footer>
 
 </main>
@@ -378,8 +382,9 @@ a{color:inherit}
     for (var i = 0; i < els.length; i++){
       var el = els[i], inner = el.firstElementChild;
       var max = parseFloat(el.getAttribute('data-max')) || 200;
+      var trim = parseFloat(el.getAttribute('data-trim')) || 1;
       el.style.fontSize = '100px';
-      var w = inner.offsetWidth, avail = el.clientWidth;
+      var w = inner.offsetWidth, avail = el.clientWidth * trim;
       if (w > 0 && avail > 0){
         el.style.fontSize = Math.min(max, Math.floor(1000 * avail / w) / 10 - 0.3) + 'px';
       }
