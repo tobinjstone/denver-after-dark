@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Denver After Dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Decision Desk: election-night broadcast package.
+   Layout: one stacked column of broadcast "segments" on phone; two columns on desktop
+   (the call + crowd on the left, the race board + floor on the right). A fixed news crawl
+   runs along the bottom edge. Flat navy panels with a gloss line on top, red for LIVE and
+   calls, gold for the leader and the single highlight. */
+:root {
+  --navy-900: #06142b;
+  --navy-800: #0b1f3f;
+  --navy-700: #12305c;
+  --navy-600: #1b4177;
+  --white: #f5f7fb;
+  --ink: #0a1730;
+  --muted: #9cb0cc;
+  --red: #e3132b;
+  --red-dk: #a80c1e;
+  --gold: #f4b81c;
+  --line: rgba(255, 255, 255, 0.14);
+  --gloss: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.02) 38%, rgba(0,0,0,0) 39%);
+
+  --f-head: "Barlow Condensed", "Roboto Condensed", "Arial Narrow", sans-serif-condensed, Impact, sans-serif;
+  --f-body: "Public Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+
+  --ticker-h: 44px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--navy-900); }
+body {
+  margin: 0;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 64px),
+    radial-gradient(120% 60% at 50% -10%, var(--navy-700) 0%, var(--navy-900) 70%);
+  background-attachment: fixed;
+  color: var(--white);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.45;
+  min-height: 100vh;
+  padding-bottom: calc(var(--ticker-h) + env(safe-area-inset-bottom, 0px) + 24px);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: linear-gradient(180deg, #0f2850, var(--navy-800));
+  border-bottom: 2px solid var(--red);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 21; background: #0f2850;
+}
+.topbar-in {
+  max-width: 1120px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-block: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.station {
+  display: flex; align-items: center; gap: 10px; min-width: 0;
+  font-family: var(--f-head); font-weight: 800; font-size: 20px;
+  letter-spacing: 0.02em; text-transform: uppercase; line-height: 1;
+  white-space: nowrap;
+}
+.station-mark {
+  display: grid; place-items: center;
+  width: 34px; height: 34px; flex: none;
+  background: var(--white); color: var(--navy-800);
+  font-size: 15px; letter-spacing: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
+}
+.station-mark svg { width: 22px; height: 22px; }
+.station-name span { color: var(--gold); }
+@media (max-width: 480px) {
+  .station { font-size: 17px; gap: 8px; }
+  .station-name { line-height: 0.92; }
+  .station-name span { display: block; }
+  .station-mark { width: 30px; height: 30px; }
+}
+.live-wrap { display: flex; align-items: stretch; flex: none; height: 30px; }
+.live {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--red); color: #fff;
+  padding: 0 10px;
+  font-family: var(--f-head); font-weight: 800; font-size: 17px; letter-spacing: 0.08em;
+}
+.live-dot {
+  width: 9px; height: 9px; border-radius: 50%; background: #fff;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.7); } }
+.clock {
+  display: flex; align-items: center;
+  background: var(--white); color: var(--ink);
+  padding: 0 10px;
+  font-family: var(--f-head); font-weight: 700; font-size: 18px;
+}
+.clock small { font-size: 13px; margin-left: 4px; color: #3a4f72; font-weight: 700; }
+
+/* ---------- layout ---------- */
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-block: 18px 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 22px;
+}
+.col { display: grid; gap: 22px; align-content: start; min-width: 0; }
+@media (min-width: 900px) {
+  .wrap { grid-template-columns: 1.05fr 1fr; gap: 28px; padding-block: 28px 8px; }
+  .col { gap: 28px; }
+}
+
+/* segment tab header (native broadcast graphic) */
+.seg-head {
+  display: flex; align-items: stretch; gap: 0;
+  font-family: var(--f-head); text-transform: uppercase; line-height: 1;
+}
+.seg-head .tab {
+  background: var(--white); color: var(--navy-800);
+  font-weight: 800; font-size: 19px; letter-spacing: 0.03em;
+  padding: 8px 12px 7px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  padding-right: 22px;
+}
+.seg-head .sub {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--navy-600); color: var(--white);
+  font-weight: 600; font-size: 16px; letter-spacing: 0.04em;
+  padding: 0 12px 0 16px; margin-left: -10px;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  padding-right: 20px;
+}
+.panel {
+  background: var(--gloss), var(--navy-800);
+  border: 1px solid var(--line);
+  border-top-color: rgba(255,255,255,0.32);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.5), 0 14px 30px rgba(0,0,0,0.28);
+}
+
+/* ---------- the call ---------- */
+.call { position: relative; overflow: hidden; }
+.call-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: linear-gradient(180deg, #f2233b 0%, var(--red) 45%, var(--red-dk) 100%);
+  padding: 9px 14px 8px;
+  font-family: var(--f-head); font-weight: 800; font-size: 21px;
+  letter-spacing: 0.06em; text-transform: uppercase; line-height: 1;
+}
+.call-banner .tag {
+  font-size: 13px; letter-spacing: 0.1em; font-weight: 700;
+  border: 1.5px solid rgba(255,255,255,0.85); padding: 3px 6px 2px; white-space: nowrap;
+}
+.call-body {
+  display: grid; grid-template-columns: auto 1fr; gap: 14px;
+  padding: 18px 16px 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.97), #e7ecf4);
+  color: var(--ink);
+}
+.check {
+  width: 54px; height: 54px; flex: none; margin-top: 4px;
+  background: var(--gold); border-radius: 50%;
+  display: grid; place-items: center;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.18), 0 0 0 3px rgba(244,184,28,0.25);
+}
+.check svg { width: 32px; height: 32px; }
+.check path { stroke-dasharray: 40; stroke-dashoffset: 0; animation: draw 0.5s 0.75s ease-out backwards; }
+@keyframes draw { from { stroke-dashoffset: 40; } to { stroke-dashoffset: 0; } }
+.winner { min-width: 0; }
+.winner h1 {
+  margin: 0;
+  font-family: var(--f-head); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(42px, 12.4vw, 74px); line-height: 0.88; letter-spacing: -0.005em;
+  text-wrap: balance; overflow-wrap: anywhere;
+  color: var(--navy-800);
+}
+.winner .addr {
+  margin: 10px 0 0;
+  font-family: var(--f-head); font-weight: 600; font-size: 21px; line-height: 1.1;
+  color: #23395e; text-transform: uppercase; letter-spacing: 0.02em;
+}
+.winner .addr b { color: var(--red); font-weight: 800; }
+.call-meta {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+}
+.call-meta > div {
+  padding: 10px 14px 11px;
+  font-family: var(--f-head); text-transform: uppercase; line-height: 1.05;
+}
+.call-meta > div + div { border-left: 1px solid var(--line); }
+.call-meta dt, .call-meta .k { color: var(--muted); font-weight: 600; font-size: 14px; letter-spacing: 0.06em; }
+.call-meta .v { font-weight: 800; font-size: 24px; color: var(--white); margin-top: 3px; }
+.host-note {
+  display: flex; gap: 0; align-items: stretch;
+  border-top: 1px solid var(--line);
+}
+.host-note .who {
+  background: var(--red); color: #fff;
+  font-family: var(--f-head); font-weight: 800; font-size: 15px; letter-spacing: 0.1em;
+  display: grid; place-items: center; padding: 0 12px; text-transform: uppercase;
+}
+.host-note p { margin: 0; padding: 11px 14px; font-weight: 600; font-size: 16px; }
+.fresh {
+  display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  padding: 8px 14px; background: var(--navy-900);
+  font-family: var(--f-head); font-weight: 600; font-size: 14px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+}
+.fresh b { color: var(--gold); font-weight: 700; }
+
+/* broadcast wipe on load: a red/white panel sweeps across the card and exits right.
+   The card itself is never hidden; at rest the wipe sits off-canvas. */
+.call::after {
+  content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--red) 0 62%, var(--white) 62% 70%, var(--navy-600) 70% 100%);
+  transform: translateX(101%);
+  animation: wipe 0.85s cubic-bezier(.7,0,.25,1) 0.1s backwards;
+}
+@keyframes wipe {
+  0% { transform: translateX(-101%); }
+  42% { transform: translateX(0); }
+  100% { transform: translateX(101%); }
+}
+
+/* ---------- chyron buttons ---------- */
+.chyron { display: grid; gap: 0; }
+.chyron-label {
+  justify-self: start;
+  background: var(--gold); color: var(--ink);
+  font-family: var(--f-head); font-weight: 800; font-size: 15px; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 5px 18px 4px 10px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.chyron-bar {
+  display: grid; grid-template-columns: 1.25fr 1fr 1fr;
+  background: linear-gradient(180deg, #ffffff, #dfe5ee);
+  border-bottom: 4px solid var(--red);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+}
+.chyron-bar a {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  min-height: 56px; padding: 0 12px;
+  color: var(--navy-800); text-decoration: none;
+  font-family: var(--f-head); font-weight: 800; font-size: 22px; text-transform: uppercase;
+  letter-spacing: 0.02em; line-height: 1;
+  transition: background 0.15s;
+}
+.chyron-bar a + a { border-left: 1px solid #b9c4d4; }
+.chyron-bar a:hover { background: #ffffff; }
+.chyron-bar a:active { background: #f7e3a8; }
+.chyron-bar .arr { color: var(--red); font-size: 20px; }
+
+/* ---------- crowd / party reporting ---------- */
+.crowd { padding: 16px 14px 14px; display: grid; gap: 14px; }
+.crowd-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.big-pct {
+  font-family: var(--f-head); font-weight: 800; font-size: 64px; line-height: 0.82; color: var(--white);
+}
+.big-pct small { font-size: 30px; color: var(--gold); }
+.big-pct-cap {
+  font-family: var(--f-head); font-weight: 700; text-transform: uppercase; font-size: 17px;
+  letter-spacing: 0.04em; color: var(--muted); margin-top: 6px; line-height: 1.05;
+}
+.tallies { display: flex; gap: 18px; font-family: var(--f-head); text-transform: uppercase; }
+.tally .n { font-weight: 800; font-size: 34px; line-height: 0.9; }
+.tally .l { font-weight: 600; font-size: 14px; letter-spacing: 0.06em; color: var(--muted); }
+.tally.here .n { color: var(--gold); }
+.meter {
+  display: flex; height: 14px; background: rgba(0,0,0,0.35);
+  border: 1px solid var(--line); overflow: hidden;
+}
+.meter .m-here { background: linear-gradient(180deg, #ffd25a, var(--gold)); transition: width 0.4s ease; }
+.meter .m-way {
+  background: repeating-linear-gradient(135deg, rgba(255,255,255,0.75) 0 4px, rgba(255,255,255,0.35) 4px 8px);
+  transition: width 0.4s ease;
+}
+.crowd-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.vote-btn {
+  min-height: 52px; cursor: pointer;
+  border: 2px solid var(--white); background: transparent;
+  font-family: var(--f-head); font-weight: 800; font-size: 21px; text-transform: uppercase;
+  letter-spacing: 0.04em; line-height: 1;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.vote-btn .box {
+  width: 18px; height: 18px; border: 2px solid currentColor; display: grid; place-items: center; flex: none;
+}
+.vote-btn .box svg { width: 13px; height: 13px; opacity: 0; }
+.vote-btn:hover { background: rgba(255,255,255,0.08); }
+.vote-btn[aria-pressed="true"] { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.vote-btn[aria-pressed="true"] .box svg { opacity: 1; }
+
+/* ---------- race board: next move ---------- */
+.race { display: grid; gap: 0; }
+.race-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  padding: 12px 14px 10px; border-bottom: 1px solid var(--line);
+}
+.race-title { font-family: var(--f-head); font-weight: 800; font-size: 26px; text-transform: uppercase; line-height: 1; }
+.race-title span { color: var(--muted); font-weight: 600; font-size: 20px; }
+.tec {
+  background: var(--gold); color: var(--ink);
+  font-family: var(--f-head); font-weight: 800; font-size: 14px; letter-spacing: 0.1em;
+  padding: 5px 8px 4px; text-transform: uppercase; white-space: nowrap;
+}
+.cands { list-style: none; margin: 0; padding: 0; }
+.cand {
+  display: grid; grid-template-columns: 48px 1fr auto; gap: 4px 12px; align-items: center;
+  width: 100%; text-align: left; cursor: pointer;
+  background: transparent; border: 0; border-bottom: 1px solid var(--line);
+  padding: 12px 14px; min-height: 76px;
+  transition: background 0.15s;
+}
+.cand:hover { background: rgba(255,255,255,0.04); }
+.cand .mono {
+  grid-row: 1 / span 2;
+  width: 48px; height: 48px; display: grid; place-items: center;
+  font-family: var(--f-head); font-weight: 800; font-size: 20px; letter-spacing: 0.02em;
+  background: linear-gradient(180deg, #2a5291, var(--navy-600)); color: var(--white);
+  border-top: 1px solid rgba(255,255,255,0.35);
+}
+.cand.lead .mono { background: linear-gradient(180deg, #ffd25a, var(--gold)); color: var(--ink); }
+.cand .name {
+  font-family: var(--f-head); font-weight: 700; font-size: 23px; line-height: 1; text-transform: uppercase;
+  min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.cand .hood { font-family: var(--f-body); font-size: 13px; color: var(--muted); font-weight: 500; text-transform: none; }
+.cand .pct {
+  grid-row: 1 / span 2; grid-column: 3;
+  font-family: var(--f-head); font-weight: 800; font-size: 38px; line-height: 0.9; text-align: right;
+}
+.cand .pct small { font-size: 20px; color: var(--muted); }
+.cand.lead .pct { color: var(--gold); }
+.cand .bar-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; min-width: 0; }
+.cand .bar { height: 10px; background: rgba(0,0,0,0.35); overflow: hidden; }
+.cand .bar i { display: block; height: 100%; background: rgba(245,247,251,0.78); transition: width 0.45s ease; }
+.cand.lead .bar i { background: var(--gold); }
+.cand .votes { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.yours {
+  font-family: var(--f-head); font-size: 12px; font-weight: 800; letter-spacing: 0.1em;
+  background: var(--red); color: #fff; padding: 2px 5px 1px; display: none;
+}
+.cand[aria-pressed="true"] .yours { display: inline-block; }
+.cand[aria-pressed="true"] { background: rgba(227,19,43,0.10); box-shadow: inset 4px 0 0 var(--red); }
+.race-foot {
+  padding: 10px 14px 12px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  font-size: 13px; color: var(--muted);
+}
+.race-foot b { color: var(--white); font-weight: 600; }
+
+/* ---------- called earlier ---------- */
+.earlier { list-style: none; margin: 0; padding: 0; }
+.earlier li {
+  display: grid; grid-template-columns: 72px 1fr auto; gap: 12px; align-items: center;
+  padding: 12px 14px; border-bottom: 1px solid var(--line);
+}
+.earlier li:last-child { border-bottom: 0; }
+.earlier .t { font-family: var(--f-head); font-weight: 700; font-size: 20px; color: var(--muted); }
+.earlier .v { font-family: var(--f-head); font-weight: 700; font-size: 22px; text-transform: uppercase; line-height: 1; }
+.earlier .v span { display: block; font-family: var(--f-body); font-weight: 500; font-size: 13px; text-transform: none; color: var(--muted); margin-top: 4px; }
+.called {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--f-head); font-weight: 800; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--white); border: 1.5px solid rgba(255,255,255,0.5); padding: 3px 7px 2px;
+}
+.called svg { width: 12px; height: 12px; }
+.earlier li.now { background: rgba(244,184,28,0.08); }
+.earlier li.now .t { color: var(--gold); }
+.earlier li.now .called { background: var(--red); border-color: var(--red); }
+
+/* ---------- from the floor (chat) ---------- */
+.msgs { list-style: none; margin: 0; padding: 6px 0; display: grid; gap: 0; max-height: 420px; overflow-y: auto; }
+.msg { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 0; padding: 7px 14px; }
+.msg .nm {
+  font-family: var(--f-head); font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 0.05em;
+  background: var(--navy-600); color: var(--white); padding: 4px 14px 3px 8px; line-height: 1.1;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+  white-space: nowrap; align-self: start;
+}
+.msg.host .nm { background: var(--red); }
+.msg.me .nm { background: var(--gold); color: var(--ink); }
+.msg .tx {
+  background: rgba(255,255,255,0.94); color: var(--ink);
+  padding: 5px 10px 5px 12px; font-weight: 500; font-size: 15px; line-height: 1.35;
+  min-width: 0; overflow-wrap: anywhere; margin-left: -4px;
+}
+.msg .tm { grid-column: 2; font-size: 11px; color: var(--muted); padding: 3px 0 0 8px; font-weight: 600; letter-spacing: 0.04em; }
+.compose {
+  display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr) auto; gap: 8px;
+  padding: 12px 14px 14px; border-top: 1px solid var(--line); background: rgba(0,0,0,0.18);
+}
+.compose input {
+  min-height: 46px; padding: 0 10px; min-width: 0;
+  background: var(--navy-900); border: 1px solid rgba(255,255,255,0.28); color: var(--white);
+  font-size: 16px;
+}
+.compose input::placeholder { color: #7389a8; }
+.compose button {
+  min-height: 46px; padding: 0 14px; cursor: pointer;
+  background: var(--red); border: 0; color: #fff;
+  font-family: var(--f-head); font-weight: 800; font-size: 19px; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.compose button:hover { background: #f2233b; }
+@media (max-width: 420px) {
+  .compose { grid-template-columns: 1fr auto; }
+  .compose #chat-name { grid-column: 1 / -1; }
+}
+
+/* ---------- partiful ---------- */
+.rsvp {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  text-decoration: none; min-height: 60px; padding: 0 16px;
+  background: var(--gloss), var(--navy-700);
+  border: 1px solid var(--line); border-left: 6px solid var(--gold);
+  font-family: var(--f-head); font-weight: 800; font-size: 22px; text-transform: uppercase; letter-spacing: 0.02em;
+}
+.rsvp span { font-family: var(--f-body); text-transform: none; font-weight: 500; font-size: 14px; color: var(--muted); letter-spacing: 0; }
+.rsvp:hover { background: var(--gloss), var(--navy-600); }
+.rsvp .arr { color: var(--gold); }
+
+/* ---------- crawl ---------- */
+.crawl {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  height: calc(var(--ticker-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: flex; align-items: stretch;
+  background: var(--white); color: var(--ink);
+  border-top: 3px solid var(--red);
+  box-shadow: 0 -8px 20px rgba(0,0,0,0.35);
+}
+.crawl-tab {
+  flex: none; display: flex; align-items: center; gap: 7px;
+  background: var(--red); color: #fff;
+  padding: 0 14px 0 max(14px, env(safe-area-inset-left, 0px));
+  font-family: var(--f-head); font-weight: 800; font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  padding-right: 24px;
+}
+.crawl-view { flex: 1; overflow: hidden; display: flex; align-items: center; min-width: 0; }
+.crawl-track {
+  display: flex; flex: none; white-space: nowrap;
+  animation: crawl 38s linear infinite;
+  font-family: var(--f-head); font-weight: 600; font-size: 19px; text-transform: uppercase; letter-spacing: 0.02em;
+}
+.crawl-track span { padding: 0 18px; display: inline-flex; align-items: center; gap: 8px; }
+.crawl-track b { font-weight: 800; color: var(--red); }
+.crawl-track span::after { content: ""; width: 7px; height: 7px; background: var(--navy-600); margin-left: 26px; transform: rotate(45deg); }
+@keyframes crawl { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .call::after { display: none; }
+  .crawl-view { overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="station">
+      <div class="station-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M2 19 L8.5 9 L12 14 L15 10 L22 19 Z" fill="#0b1f3f"/><circle cx="17.5" cy="5.5" r="2.4" fill="#e3132b"/></svg>
+      </div>
+      <div class="station-name">Denver <span>After Dark</span></div>
+    </div>
+    <div class="live-wrap" aria-label="Live">
+      <div class="live"><span class="live-dot" aria-hidden="true"></span>Live</div>
+      <div class="clock num"><span id="clock">11:42</span><small id="ampm">PM MT</small></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="col">
+
+    <section class="panel call" aria-labelledby="venue">
+      <div class="call-banner">
+        <span>We can now project</span>
+        <span class="tag">Decision desk</span>
+      </div>
+      <div class="call-body">
+        <div class="check" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M7 16.5 L13.5 23 L25.5 10" stroke="#0a1730" stroke-width="4.2" stroke-linecap="square"/></svg>
+        </div>
+        <div class="winner">
+          <h1 id="venue">Ophelia's Electric Soapbox</h1>
+          <p class="addr">1215 20th St <b>·</b> Ballpark</p>
+        </div>
+      </div>
+      <div class="call-meta">
+        <div><div class="k">Called at</div><div class="v num">11:10 PM</div></div>
+        <div><div class="k">Next move</div><div class="v num">~12:30 AM</div></div>
+      </div>
+      <div class="host-note">
+        <div class="who">Host</div>
+        <p>Downstairs. We're by the stage.</p>
+      </div>
+      <div class="fresh">
+        <span>As of <span class="num">11:38 PM</span></span>
+        <b id="ago">Updated 4 min ago</b>
+      </div>
+    </section>
+
+    <nav class="chyron" aria-label="Get to Ophelia's">
+      <div class="chyron-label">Get there</div>
+      <div class="chyron-bar">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Ophelia%27s%20Electric%20Soapbox%2C%201215%2020th%20St%2C%20Denver%2C%20CO" target="_blank" rel="noopener">Directions <span class="arr" aria-hidden="true">▶</span></a>
+        <a href="https://m.uber.com/ul/?action=setPickup&amp;pickup=my_location&amp;dropoff%5Bformatted_address%5D=1215%2020th%20St%2C%20Denver%2C%20CO&amp;dropoff%5Bnickname%5D=Ophelia%27s" target="_blank" rel="noopener">Uber <span class="arr" aria-hidden="true">▶</span></a>
+        <a href="https://ride.lyft.com/" target="_blank" rel="noopener">Lyft <span class="arr" aria-hidden="true">▶</span></a>
+      </div>
+    </nav>
+
+    <section aria-labelledby="crowd-h">
+      <div class="seg-head"><span class="tab" id="crowd-h">Party reporting</span><span class="sub">Ophelia's</span></div>
+      <div class="panel crowd">
+        <div class="crowd-top">
+          <div>
+            <div class="big-pct num"><span id="pct">77</span><small>%</small></div>
+            <div class="big-pct-cap">of the party<br>in the room</div>
+          </div>
+          <div class="tallies">
+            <div class="tally here"><div class="n num" id="n-here">41</div><div class="l">Here</div></div>
+            <div class="tally"><div class="n num" id="n-way">12</div><div class="l">En route</div></div>
+          </div>
+        </div>
+        <div class="meter" aria-hidden="true"><i class="m-here" id="m-here" style="width:77%"></i><i class="m-way" id="m-way" style="width:23%"></i></div>
+        <div class="crowd-btns">
+          <button class="vote-btn" id="btn-here" type="button" aria-pressed="false">
+            <span class="box" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7.5 L5.5 11 L12 3.5" stroke="currentColor" stroke-width="2.6"/></svg></span>I'm here
+          </button>
+          <button class="vote-btn" id="btn-way" type="button" aria-pressed="false">
+            <span class="box" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7.5 L5.5 11 L12 3.5" stroke="currentColor" stroke-width="2.6"/></svg></span>On my way
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <div class="col">
+
+    <section aria-labelledby="race-h">
+      <div class="seg-head"><span class="tab" id="race-h">Next move</span><span class="sub num">~12:30 AM</span></div>
+      <div class="panel race">
+        <div class="race-head">
+          <div class="race-title">Where to next <span>· tap to vote</span></div>
+          <div class="tec">Too early to call</div>
+        </div>
+        <ul class="cands" id="cands">
+          <li><button class="cand" type="button" data-i="0" aria-pressed="false">
+            <span class="mono" aria-hidden="true">W&amp;G</span>
+            <span class="name">Williams &amp; Graham <span class="yours">Your vote</span></span>
+            <span class="pct num"><span class="p">44</span><small>%</small></span>
+            <span class="bar-row"><span class="bar"><i style="width:44%"></i></span><span class="votes num"><span class="v">14</span> votes · LoHi</span></span>
+          </button></li>
+          <li><button class="cand" type="button" data-i="1" aria-pressed="false">
+            <span class="mono" aria-hidden="true">RG</span>
+            <span class="name">Retrograde <span class="yours">Your vote</span></span>
+            <span class="pct num"><span class="p">31</span><small>%</small></span>
+            <span class="bar-row"><span class="bar"><i style="width:31%"></i></span><span class="votes num"><span class="v">10</span> votes · Uptown</span></span>
+          </button></li>
+          <li><button class="cand" type="button" data-i="2" aria-pressed="false">
+            <span class="mono" aria-hidden="true">PK</span>
+            <span class="name">Pete's Kitchen <span class="yours">Your vote</span></span>
+            <span class="pct num"><span class="p">25</span><small>%</small></span>
+            <span class="bar-row"><span class="bar"><i style="width:25%"></i></span><span class="votes num"><span class="v">8</span> votes · E Colfax</span></span>
+          </button></li>
+        </ul>
+        <div class="race-foot">
+          <span><b class="num" id="total">32</b> votes counted</span>
+          <span>Destination TBD. Ideas in the chat.</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="earlier-h">
+      <div class="seg-head"><span class="tab" id="earlier-h">Called earlier</span><span class="sub">Tonight</span></div>
+      <ul class="panel earlier">
+        <li class="now">
+          <span class="t num">11:10</span>
+          <span class="v">Ophelia's <span>1215 20th St · Ballpark</span></span>
+          <span class="called">Now</span>
+        </li>
+        <li>
+          <span class="t num">10:05</span>
+          <span class="v">Improper City <span>RiNo</span></span>
+          <span class="called"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 6.5 L4.5 9.5 L10.5 2.5" stroke="currentColor" stroke-width="2.2"/></svg>Called</span>
+        </li>
+        <li>
+          <span class="t num">9:00</span>
+          <span class="v">Number Thirty Eight <span>RiNo</span></span>
+          <span class="called"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 6.5 L4.5 9.5 L10.5 2.5" stroke="currentColor" stroke-width="2.2"/></svg>Called</span>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="floor-h">
+      <div class="seg-head"><span class="tab" id="floor-h">From the floor</span><span class="sub num"><span id="msg-count">6</span>&nbsp;messages</span></div>
+      <div class="panel">
+        <ul class="msgs" id="msgs" aria-live="polite"></ul>
+        <form class="compose" id="compose" autocomplete="off">
+          <input id="chat-name" name="name" type="text" maxlength="20" placeholder="Your name" aria-label="Your name">
+          <input id="chat-text" name="text" type="text" maxlength="200" placeholder="Say something" aria-label="Message">
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <a class="rsvp" href="https://partiful.com/e/9ouN1xvHTecHt3R3sUa6" target="_blank" rel="noopener">
+      <div>RSVP on Partiful<br><span>Denver After Dark · Thu Nov 12</span></div>
+      <span class="arr" aria-hidden="true">▶</span>
+    </a>
+
+  </div>
+</main>
+
+<div class="crawl" role="marquee" aria-label="Latest from the floor">
+  <div class="crawl-tab"><span class="live-dot" aria-hidden="true" style="background:#fff"></span>Latest</div>
+  <div class="crawl-view"><div class="crawl-track" id="crawl"></div></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var loadedAt = Date.now();
+  var baseMin = 23 * 60 + 42;      // 11:42 PM
+  var updatedMin = 23 * 60 + 38;   // 11:38 PM
+
+  function fmt(totalMin) {
+    var m = ((totalMin % 1440) + 1440) % 1440;
+    var h = Math.floor(m / 60), mm = m % 60;
+    var ap = h >= 12 ? "PM" : "AM";
+    h = h % 12; if (h === 0) h = 12;
+    return { t: h + ":" + (mm < 10 ? "0" : "") + mm, ap: ap };
+  }
+  function nowMin() { return baseMin + Math.floor((Date.now() - loadedAt) / 60000); }
+  function tick() {
+    var n = nowMin(), f = fmt(n);
+    document.getElementById("clock").textContent = f.t;
+    document.getElementById("ampm").textContent = f.ap + " MT";
+    var ago = n - updatedMin;
+    document.getElementById("ago").textContent = ago <= 0 ? "Updated just now" : "Updated " + ago + " min ago";
+  }
+  tick(); setInterval(tick, 15000);
+
+  /* ---- party reporting ---- */
+  var here = 41, way = 12, mine = null;
+  var bHere = document.getElementById("btn-here"), bWay = document.getElementById("btn-way");
+  function renderCrowd() {
+    var h = here + (mine === "here" ? 1 : 0), w = way + (mine === "way" ? 1 : 0);
+    var pct = Math.round(h / (h + w) * 100);
+    document.getElementById("n-here").textContent = h;
+    document.getElementById("n-way").textContent = w;
+    document.getElementById("pct").textContent = pct;
+    document.getElementById("m-here").style.width = pct + "%";
+    document.getElementById("m-way").style.width = (100 - pct) + "%";
+    bHere.setAttribute("aria-pressed", mine === "here");
+    bWay.setAttribute("aria-pressed", mine === "way");
+  }
+  bHere.addEventListener("click", function () { mine = mine === "here" ? null : "here"; renderCrowd(); });
+  bWay.addEventListener("click", function () { mine = mine === "way" ? null : "way"; renderCrowd(); });
+
+  /* ---- race board ---- */
+  var base = [14, 10, 8], myVote = -1;
+  var cands = Array.prototype.slice.call(document.querySelectorAll(".cand"));
+  function renderRace() {
+    var v = base.map(function (n, i) { return n + (i === myVote ? 1 : 0); });
+    var total = v.reduce(function (a, b) { return a + b; }, 0);
+    var lead = v.indexOf(Math.max.apply(null, v));
+    cands.forEach(function (el, i) {
+      var p = Math.round(v[i] / total * 100);
+      el.querySelector(".p").textContent = p;
+      el.querySelector(".v").textContent = v[i];
+      el.querySelector(".bar i").style.width = p + "%";
+      el.classList.toggle("lead", i === lead);
+      el.setAttribute("aria-pressed", i === myVote);
+    });
+    document.getElementById("total").textContent = total;
+  }
+  cands.forEach(function (el, i) {
+    el.addEventListener("click", function () { myVote = myVote === i ? -1 : i; renderRace(); });
+  });
+  renderRace();
+
+  /* ---- from the floor ---- */
+  var msgs = [
+    { n: "Maya", t: "leaving the Hilton reception now, 10 min", at: "11:24 PM" },
+    { n: "Jordan", t: "is there a cover?", at: "11:27 PM" },
+    { n: "Host", t: "no cover, just come down", at: "11:28 PM", host: true },
+    { n: "Sam", t: "someone save me a spot by the stage", at: "11:33 PM" },
+    { n: "Priya", t: "who's in for Pete's Kitchen after", at: "11:36 PM" },
+    { n: "Alex", t: "🫡", at: "11:40 PM" }
+  ];
+  var list = document.getElementById("msgs"), crawl = document.getElementById("crawl");
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function renderMsg(m) {
+    var li = el("li", "msg" + (m.host ? " host" : "") + (m.me ? " me" : ""));
+    li.appendChild(el("span", "nm", m.n));
+    li.appendChild(el("span", "tx", m.t));
+    li.appendChild(el("span", "tm", m.at));
+    list.appendChild(li);
+  }
+  function renderCrawl() {
+    crawl.textContent = "";
+    var latest = msgs.slice(-5);
+    for (var k = 0; k < 2; k++) {
+      latest.forEach(function (m) {
+        var s = el("span");
+        s.appendChild(el("b", null, m.n + ":"));
+        s.appendChild(document.createTextNode(" " + m.t));
+        if (k === 1) s.setAttribute("aria-hidden", "true");
+        crawl.appendChild(s);
+      });
+    }
+  }
+  msgs.forEach(renderMsg);
+  renderCrawl();
+  list.scrollTop = list.scrollHeight;
+
+  var nameIn = document.getElementById("chat-name"), textIn = document.getElementById("chat-text");
+  try { var saved = localStorage.getItem("dad-name"); if (saved) nameIn.value = saved; } catch (e) {}
+  document.getElementById("compose").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var name = nameIn.value.trim(), text = textIn.value.trim();
+    if (!name) { nameIn.focus(); nameIn.placeholder = "Add your name"; return; }
+    if (!text) { textIn.focus(); return; }
+    try { localStorage.setItem("dad-name", name); } catch (e) {}
+    var f = fmt(nowMin());
+    var m = { n: name, t: text, at: f.t + " " + f.ap, me: true };
+    msgs.push(m); renderMsg(m); renderCrawl();
+    document.getElementById("msg-count").textContent = msgs.length;
+    textIn.value = "";
+    list.scrollTop = list.scrollHeight;
+  });
+})();
+</script>
+</body>
+</html>
