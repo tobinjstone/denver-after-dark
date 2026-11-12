@@ -130,7 +130,7 @@ button { font: inherit; }
 }
 
 /* ---------- brand: boomerang enamel panel ---------- */
-.mast { display: grid; justify-items: center; padding-top: 18px; }
+.mast { display: grid; justify-items: center; padding-top: 18px; margin-bottom: -16px; }
 .brand-panel {
   position: relative;
   padding: 8px 30px 16px 26px;
@@ -360,8 +360,48 @@ button { font: inherit; }
 }
 #go-maps:active, .tube.blue:active { box-shadow: 0 0 0 2px #1d1216, 0 2px 0 #7d520c, 0 4px 10px rgba(0, 0, 0, .45), inset 0 2px 0 rgba(255, 255, 255, .4); }
 
-.caveat { margin: 18px 4px 0; font-size: 14px; color: var(--muted); text-wrap: pretty; }
-.caveat a { color: var(--cream); text-underline-offset: 3px; white-space: nowrap; }
+/* rider sign: hangs under the name panel like a motel's "COLOR TV" plate, links to the fine print */
+.rider {
+  position: relative;
+  display: grid; justify-items: center; gap: 2px;
+  max-width: 340px;
+  margin: 24px 0 0;
+  padding: 8px 16px 8px;
+  border-radius: 9px;
+  border: 3px solid var(--red);
+  background: linear-gradient(180deg, #f6ead0, var(--cream) 50%, #e2d2ab);
+  box-shadow: 0 0 0 2px #1d1216, 0 8px 16px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .6);
+  color: var(--navy);
+  text-align: center;
+  text-decoration: none;
+  transform: rotate(-2deg);
+  transition: transform .15s, filter .15s;
+}
+.rider::before, .rider::after {
+  content: ""; position: absolute; top: -25px; width: 2px; height: 22px;
+  background: repeating-linear-gradient(180deg, #8a8490 0 4px, #3b3740 4px 6px);
+}
+.rider::before { left: 22%; } .rider::after { right: 22%; }
+.rider:hover { filter: brightness(1.05); transform: rotate(0deg); }
+.rider-main {
+  font: 400 16px/1.15 var(--f-slab);
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--red);
+  text-wrap: balance;
+}
+.rider-sub {
+  font: 600 14px/1.3 var(--f-body);
+  color: var(--navy);
+  text-decoration: underline;
+  text-decoration-color: rgba(25, 33, 58, .35);
+  text-underline-offset: 3px;
+  text-wrap: balance;
+}
+/* arriving from the rider: the fine print's bulbs blink twice */
+#fine-print:target .fine { animation: fine-flash 1.1s ease-in-out 2; }
+@keyframes fine-flash { 50% { border-color: var(--mustard); box-shadow: 0 0 0 2px var(--mustard), 0 0 26px rgba(242, 177, 52, .45); } }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
 /* rooms readout */
 .checkin { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
@@ -581,7 +621,8 @@ button { font: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brand, .open-sign, .venue.strike, .buzz, .dot, .starburst svg, .tw, .bulb::after, .arrow .ab-glow { animation: none !important; }
+  .brand, .open-sign, .venue.strike, .buzz, .dot, .starburst svg, .tw, .bulb::after, .arrow .ab-glow, #fine-print:target .fine { animation: none !important; }
+  .rider { transition: none; }
   .bulb::after, .arrow .ab-glow { opacity: 1; }
   .tube, .check { transition: none; }
 }
@@ -617,6 +658,10 @@ button { font: inherit; }
 
   <header class="mast">
     <div class="brand-panel"><h1 class="brand">Denver After Dark</h1></div>
+    <a class="rider" href="#fine-print">
+      <span class="rider-main">Unofficial · No reservations</span>
+      <span class="rider-sub">Space might be limited. Read the fine print <span aria-hidden="true">↓</span></span>
+    </a>
   </header>
 
   <section class="hero" aria-labelledby="venue">
@@ -669,7 +714,6 @@ button { font: inherit; }
       <a class="tube" id="go-lyft" href="https://ride.lyft.com/" target="_blank" rel="noopener">Lyft</a>
     </nav>
 
-    <p class="caveat">Unofficial and unreserved. Space might be limited. <a href="#fine-print">Fine print</a></p>
 
     <div class="checkin">
       <button class="check" type="button" data-k="here" aria-pressed="false">
