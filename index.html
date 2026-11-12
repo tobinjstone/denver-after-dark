@@ -582,6 +582,95 @@ button { font: inherit; }
 .fine b { color: var(--neon-yel-core); font-weight: 700; }
 #fine-print { scroll-margin-top: 24px; }
 
+/* ---------- groups: motel key fobs ---------- */
+.rack {
+  display: grid; gap: 18px;
+  padding: 24px 16px 24px 12px;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, .06), transparent 60%),
+    linear-gradient(165deg, #15606a, var(--teal-deep) 55%, var(--teal-dark));
+  border: 3px solid var(--cream);
+  box-shadow: 0 0 0 2px var(--red), 0 0 0 4px #1d1216, 0 12px 26px rgba(0, 0, 0, .45);
+}
+.fob {
+  --fob: var(--red); --fob-ink: #fff6e2; --tilt: -1deg;
+  position: relative; display: block; width: 100%;
+  padding: 0 0 0 30px;
+  border: 0; background: none; color: var(--fob-ink);
+  font: inherit; text-align: left;
+  transform: rotate(var(--tilt));
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .45));
+}
+button.fob { cursor: pointer; transition: transform .15s; }
+button.fob:hover { transform: rotate(0deg) translateX(3px); }
+.fob:nth-child(even) { --tilt: .8deg; }
+.fob-ring { position: absolute; left: 4px; top: 50%; width: 46px; height: 46px; margin-top: -23px; z-index: 1; pointer-events: none; }
+.fob-body {
+  position: relative; display: grid; gap: 4px;
+  min-height: 92px; align-content: center;
+  padding: 14px 34px 14px 44px;
+  background: var(--fob);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--fob) 78%, #fff), var(--fob) 42%, color-mix(in srgb, var(--fob) 80%, #000));
+  clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
+}
+.fob-body::before {
+  content: ""; position: absolute; left: 22px; top: 50%; width: 15px; height: 15px; margin-top: -7.5px; border-radius: 50%;
+  background: #0d0b11; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .8), 0 0 0 2px rgba(255, 255, 255, .25);
+}
+.fob-edge { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.fob-edge polygon { fill: none; stroke: currentColor; stroke-opacity: .55; stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+.fob-name { font: 400 25px/1.05 var(--f-slab); letter-spacing: .02em; text-shadow: 0 1px 0 rgba(0, 0, 0, .3); overflow-wrap: anywhere; }
+.fob-where { font: 700 15.5px/1.25 var(--f-body); overflow-wrap: anywhere; }
+.fob-meta { font: 500 14px/1.25 var(--f-body); opacity: .88; }
+.fob.mini { padding-left: 26px; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .45)); }
+.fob.mini .fob-ring { width: 38px; height: 38px; margin-top: -19px; left: 2px; }
+.fob.mini .fob-body { min-height: 0; padding: 10px 28px 10px 38px; }
+.fob.mini .fob-body::before { left: 17px; width: 12px; height: 12px; margin-top: -6px; }
+.fob.mini .fob-name { font-size: 21px; }
+
+.mygroup { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; margin: 0 0 26px; }
+.mygroup .fob { grid-column: 1; }
+.mygroup-info { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; color: var(--ink); font-size: 15px; }
+.mygroup-info b { font-weight: 700; }
+.mygroup-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 15px; }
+.plate {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 8px 14px;
+  border-radius: 10px; border: 0;
+  background: linear-gradient(180deg, #fff6df, var(--cream));
+  color: var(--navy);
+  box-shadow: 0 0 0 2px #1d1216, 0 4px 0 #8d7f5f, 0 7px 12px rgba(0, 0, 0, .4), inset 0 2px 0 rgba(255, 255, 255, .6);
+  font: 700 14.5px/1.1 var(--f-body);
+  text-decoration: none; white-space: nowrap; cursor: pointer;
+}
+.plate:active { transform: translateY(3px); box-shadow: 0 0 0 2px #1d1216, 0 1px 0 #8d7f5f, 0 3px 6px rgba(0, 0, 0, .4), inset 0 2px 0 rgba(255, 255, 255, .6); }
+
+.others { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.others li {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #0d0b11;
+  border: 3px solid var(--cream-dim);
+  box-shadow: 0 0 0 2px #1d1216;
+}
+.o-name { display: inline-flex; align-items: center; gap: 9px; font: 400 19px/1.15 var(--f-slab); color: var(--ink); overflow-wrap: anywhere; min-width: 0; }
+.o-name::before { content: ""; flex: none; width: 13px; height: 13px; border-radius: 50%; background: var(--fob); box-shadow: 0 0 0 2px #1d1216, 0 0 8px var(--fob); }
+.o-where { grid-column: 1; font: 600 15.5px/1.3 var(--f-body); color: var(--ink); overflow-wrap: anywhere; }
+.o-meta { grid-column: 1; font-size: 14px; color: var(--muted); }
+.others .plate { grid-column: 2; grid-row: 1 / span 3; }
+
+.chat-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.chat-tabs button {
+  min-height: 44px; padding: 8px 16px;
+  border-radius: 999px; border: 2px solid var(--cream-dim);
+  background: rgba(10, 8, 14, .7); color: var(--ink);
+  font: 600 15px/1 var(--f-body); cursor: pointer;
+}
+.chat-tabs button[aria-selected="true"] { background: var(--cream); border-color: var(--cream); color: var(--navy); }
+.gchip { padding: 1px 8px; border-radius: 999px; background: var(--fob); color: var(--fob-ink); font: 700 11.5px/1.5 var(--f-body); letter-spacing: .02em; }
+
 /* ---------- footer ---------- */
 .foot { display: grid; gap: 16px; justify-items: center; text-align: center; padding-top: 4px; }
 .foot .tube { width: 100%; max-width: 340px; min-height: 56px; font-size: 18px; }
@@ -624,7 +713,7 @@ button { font: inherit; }
   .brand, .open-sign, .venue.strike, .buzz, .dot, .starburst svg, .tw, .bulb::after, .arrow .ab-glow, #fine-print:target .fine { animation: none !important; }
   .rider { transition: none; }
   .bulb::after, .arrow .ab-glow { opacity: 1; }
-  .tube, .check { transition: none; }
+  .tube, .check, button.fob { transition: none; }
 }
 </style>
 </head>
@@ -664,7 +753,19 @@ button { font: inherit; }
     </a>
   </header>
 
-  <section class="hero" aria-labelledby="venue">
+  <section id="pick-sec" aria-labelledby="h-pick" hidden>
+    <h2 class="hd" id="h-pick">Pick your group</h2>
+    <div class="rack" id="pick"></div>
+  </section>
+
+  <section class="hero" id="hero" aria-labelledby="venue">
+    <div class="mygroup" id="mygroup" hidden>
+      <div class="fob mini" id="my-fob"></div>
+      <button class="plate" id="switch-group" type="button">Switch group</button>
+      <div class="mygroup-info" id="my-info"></div>
+      <p class="mygroup-note" id="my-note" hidden></p>
+    </div>
+
     <div class="topper sign-row">
       <span class="open-sign" id="sign">Starts 9:00 PM</span>
     </div>
@@ -735,8 +836,17 @@ button { font: inherit; }
     </div>
   </section>
 
+  <section id="others-sec" aria-labelledby="h-others" hidden>
+    <h2 class="hd" id="h-others">Other groups</h2>
+    <ul class="others" id="others"></ul>
+  </section>
+
   <section aria-labelledby="h-chat">
     <h2 class="hd" id="h-chat">Bar talk</h2>
+    <div class="chat-tabs" id="chat-tabs" role="tablist" aria-label="Chat" hidden>
+      <button type="button" role="tab" id="tab-group" data-scope="group" aria-selected="true">My group</button>
+      <button type="button" role="tab" id="tab-all" data-scope="all" aria-selected="false">Everyone</button>
+    </div>
     <form class="compose" id="compose" autocomplete="off">
       <input class="field name" id="chat-name" name="name" type="text" maxlength="24" placeholder="Your name" aria-label="Your name" required>
       <div class="row">
@@ -801,7 +911,7 @@ button { font: inherit; }
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isHost = location.hash === '#host';
   // #demo (or ?demo) renders sample data with no network, for design previews
-  const DEMO = location.hash === '#demo' || /[?&]demo\b/.test(location.search);
+  const DEMO = /^#demo/.test(location.hash) || /[?&]demo\b/.test(location.search);
   const store = {
     get(k, d) { try { const v = localStorage.getItem('dad:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem('dad:' + k, JSON.stringify(v)); } catch (e) {} },
@@ -812,8 +922,9 @@ button { font: inherit; }
 
   /* ---------------- live data: Google Sheet, fallback data.json ---------------- */
 
-  const DEFAULT = { stops: [{ time: '9:00 PM', venue: 'Larimer Beer Hall', address: '2012 Larimer St', area: 'Ballpark', note: 'Tentative starting spot. Confirming before 9.', status: 'next' }], hide: [] };
+  const DEFAULT = { stops: [{ time: '9:00 PM', venue: 'Larimer Beer Hall', address: '2012 Larimer St', area: 'Ballpark', note: 'Tentative starting spot. Confirming before 9.', status: 'next' }], hide: [], groups: [] };
   let data = store.get('data', DEFAULT);
+  if (!data.groups) data.groups = [];
   let lastSync = 0;
   let lastNowKey = null;
 
@@ -846,23 +957,36 @@ button { font: inherit; }
       area: r.area || r.neighborhood || '',
       note: r.note || '',
       status: (r.status || '').toLowerCase(),
+      group: r.group || '',
     })).filter((s) => s.venue || s.time);
+  }
+
+  const slug = (v) => String(v || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  function cleanGroups(rows) {
+    return rows.map((r) => ({
+      name: r.group || r.name || '',
+      leader: r.leader || '',
+      phone: r.phone || '',
+      signal: r.signal || '',
+      note: r.note || '',
+    })).filter((g) => g.name).map((g, i) => Object.assign(g, { key: slug(g.name), idx: i }));
   }
 
   async function load() {
     let next = null;
     try {
-      const [stops, hide] = await Promise.all([sheetTab('Stops'), sheetTab('Hide').catch(() => [])]);
+      const [stops, hide, groups] = await Promise.all([sheetTab('Stops'), sheetTab('Hide').catch(() => []), sheetTab('Groups').catch(() => [])]);
       next = {
         stops: cleanStops(stops),
         hide: hide.map((r) => Object.values(r)[0]).filter(Boolean),
+        groups: cleanGroups(groups),
       };
     } catch (e) {
       try {
         const r = await fetch(CONFIG.fallbackJson + '?t=' + Date.now(), { cache: 'no-store' });
         if (r.ok) {
           const j = await r.json();
-          next = { stops: cleanStops(j.stops || []), hide: j.hide || [] };
+          next = { stops: cleanStops(j.stops || []), hide: j.hide || [], groups: cleanGroups(j.groups || []) };
         }
       } catch (e2) {}
     }
@@ -924,12 +1048,170 @@ button { font: inherit; }
     return m ? [m[1], m[3].replace(/\./g, '').toUpperCase()] : [t, ''];
   }
 
-  let current = null; // the stop the buttons point at
+  let current = null;     // the stop the buttons point at
+  let currentKey = 'none'; // check-in key: group + venue
+
+  /* ---------------- groups ---------------- */
+
+  const PALETTE = [
+    ['#d63a2f', '#fff6e2'], ['#1f8f86', '#fff6e2'], ['#f2b134', '#19213a'], ['#3b6fd4', '#fff6e2'],
+    ['#e2673a', '#fff6e2'], ['#8a5cc6', '#fff6e2'], ['#3f9a52', '#fff6e2'], ['#d24f8a', '#fff6e2'],
+  ];
+  let urlGroup = (() => { try { return new URLSearchParams(location.search).get('g'); } catch (e) { return null; } })();
+  let selected = null;
+  let chatScope = 'group';
+  const groupList = () => data.groups || [];
+  const groupBy = (k) => groupList().find((g) => g.key === k) || null;
+  const colorOf = (g) => PALETTE[(g ? g.idx : 0) % PALETTE.length];
+  const paint = (el, g) => { const [c, ink] = colorOf(g); el.style.setProperty('--fob', c); el.style.setProperty('--fob-ink', ink); };
+  const stopsFor = (k) => data.stops.filter((s) => !s.group || slug(s.group) === k);
+  const checkKey = (stop, k) => (k ? k + '#' : '') + venueKey(stop);
+
+  function resolveGroup() {
+    if (!groupList().length) { selected = null; return; }
+    if (selected && groupBy(selected)) return;
+    const fromUrl = urlGroup && groupBy(slug(urlGroup)) ? slug(urlGroup) : null;
+    const saved = store.get('group', null);
+    selected = fromUrl || (saved && groupBy(saved) ? saved : null);
+  }
+
+  function setUrlGroup(k) {
+    urlGroup = k;
+    try { const u = new URL(location.href); if (k) u.searchParams.set('g', k); else u.searchParams.delete('g'); history.replaceState(null, '', u); } catch (e) {}
+  }
+
+  function setGroup(k) {
+    selected = k; chatScope = 'group'; shown = CONFIG.pageSize;
+    store.set('group', k);
+    store.set('pulse', null);
+    setUrlGroup(k);
+    publish(CONFIG.pulseTopic, JSON.stringify({ c: clientId, s: 'join', v: '', g: k })).catch(() => {});
+    render();
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  }
+
+  function leaveGroup() {
+    selected = null;
+    store.set('group', null);
+    store.set('pulse', null);
+    setUrlGroup(null);
+    publish(CONFIG.pulseTopic, JSON.stringify({ c: clientId, s: 'leave', v: '', g: '' })).catch(() => {});
+    render();
+    $('pick-sec').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  }
+  $('switch-group').addEventListener('click', leaveGroup);
+
+  function memberCount(k) {
+    let n = 0;
+    pulses.forEach((p, c) => { if (c !== clientId && p.g === k && p.s !== 'leave') n++; });
+    return n + (selected === k ? 1 : 0);
+  }
+
+  function whereLine(k) {
+    const { now, next } = split(stopsFor(k));
+    if (now) return (unknown(now.venue) ? 'Somewhere' : 'At ' + now.venue) + (now.time ? ' since ' + now.time : '');
+    if (next) return (next.time ? 'Starts ' + next.time : 'Starting soon') + (unknown(next.venue) ? '' : ' at ' + next.venue);
+    return 'Location soon';
+  }
+  const metaLine = (g) => [memberCount(g.key) + ' in group', g.leader ? 'Leader: ' + g.leader : ''].filter(Boolean).join(' · ');
+
+  const RING = '<svg viewBox="0 0 46 46" aria-hidden="true"><defs><linearGradient id="brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1c2"/><stop offset=".45" stop-color="#d7a94a"/><stop offset="1" stop-color="#7a5418"/></linearGradient></defs><circle cx="21" cy="23" r="16.5" fill="none" stroke="#1d1216" stroke-width="6"/><circle cx="21" cy="23" r="16.5" fill="none" stroke="url(#brass)" stroke-width="3.6"/></svg>';
+  const EDGE = '<svg class="fob-edge" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="8.6,5 91.4,5 97.6,50 91.4,95 8.6,95 2.4,50"/></svg>';
+
+  function fobBody(g, lines) {
+    const body = document.createElement('span'); body.className = 'fob-body';
+    body.insertAdjacentHTML('afterbegin', EDGE);
+    lines.forEach(([cls, text]) => { if (!text) return; const s = document.createElement('span'); s.className = cls; s.textContent = text; body.append(s); });
+    return body;
+  }
+
+  function renderPicker() {
+    const rack = $('pick');
+    rack.textContent = '';
+    groupList().forEach((g) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'fob'; b.dataset.g = g.key;
+      b.setAttribute('aria-label', 'Join ' + g.name + '. ' + whereLine(g.key) + '. ' + metaLine(g));
+      paint(b, g);
+      b.insertAdjacentHTML('afterbegin', '<span class="fob-ring">' + RING + '</span>');
+      b.append(fobBody(g, [['fob-name', g.name], ['fob-where', whereLine(g.key)], ['fob-meta', metaLine(g)]]));
+      b.addEventListener('click', () => setGroup(g.key));
+      rack.append(b);
+    });
+  }
+
+  function renderMyGroup() {
+    const g = groupBy(selected);
+    $('mygroup').hidden = !g;
+    if (!g) return;
+    const fob = $('my-fob');
+    paint(fob, g);
+    fob.innerHTML = '<span class="fob-ring">' + RING + '</span>';
+    fob.append(fobBody(g, [['fob-name', g.name]]));
+    const info = $('my-info');
+    info.textContent = '';
+    const who = document.createElement('span');
+    who.textContent = memberCount(g.key) + ' in group';
+    if (g.leader) { who.textContent += ' · Leader '; const b = document.createElement('b'); b.textContent = g.leader; who.append(b); }
+    info.append(who);
+    if (g.phone) {
+      const a = document.createElement('a'); a.className = 'plate'; a.href = 'tel:' + g.phone.replace(/[^\d+]/g, ''); a.textContent = g.phone;
+      info.append(a);
+    }
+    if (/^https:\/\//.test(g.signal)) {
+      const a = document.createElement('a'); a.className = 'plate'; a.href = g.signal; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Signal';
+      info.append(a);
+    }
+    $('my-note').textContent = g.note;
+    $('my-note').hidden = !g.note;
+  }
+
+  function renderOthers() {
+    const list = $('others');
+    const rest = groupList().filter((g) => g.key !== selected);
+    $('others-sec').hidden = !selected || !rest.length;
+    list.textContent = '';
+    rest.forEach((g) => {
+      const li = document.createElement('li');
+      paint(li, g);
+      const n = document.createElement('span'); n.className = 'o-name'; n.textContent = g.name;
+      const w = document.createElement('span'); w.className = 'o-where'; w.textContent = whereLine(g.key);
+      const m = document.createElement('span'); m.className = 'o-meta'; m.textContent = metaLine(g);
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'plate'; b.textContent = 'Switch';
+      b.setAttribute('aria-label', 'Switch to ' + g.name);
+      b.addEventListener('click', () => setGroup(g.key));
+      li.append(n, w, m, b);
+      list.append(li);
+    });
+  }
+
+  let groupTimer = 0;
+  function scheduleGroups() {
+    if (!groupList().length || groupTimer) return;
+    groupTimer = setTimeout(() => { groupTimer = 0; if (selected) { renderMyGroup(); renderOthers(); } else renderPicker(); }, 400);
+  }
 
   function render() {
-    const { now, next, earlier } = split(data.stops);
+    resolveGroup();
+    const picking = groupList().length > 0 && !selected;
+    $('pick-sec').hidden = !picking;
+    $('hero').hidden = picking;
+    renderChatTabs();
+    if (picking) {
+      ['next-sec', 'others-sec', 'earlier-sec', 'mygroup'].forEach((id) => { $(id).hidden = true; });
+      current = null; currentKey = 'none';
+      renderPicker();
+      renderChat();
+      document.dispatchEvent(new CustomEvent('dad:render', { detail: { now: null, next: null, earlier: [], key: 'pick' } }));
+      return;
+    }
+    renderMyGroup();
+    renderOthers();
+
+    const { now, next, earlier } = split(selected ? stopsFor(selected) : data.stops);
     const hero = now || next;
     current = hero;
+    currentKey = checkKey(hero, selected);
 
     // sign
     if (now) $('sign').textContent = 'Here now';
@@ -938,7 +1220,7 @@ button { font: inherit; }
 
     // venue
     const name = hero && !unknown(hero.venue) ? hero.venue : 'Soon';
-    setVenue(name, venueKey(hero));
+    setVenue(name, checkKey(hero, selected));
 
     // address + meta
     const hasAddr = !!(hero && hero.address);
@@ -997,7 +1279,7 @@ button { font: inherit; }
     renderCounts();
     renderChat();
     // hook for decorative scripts: detail = { now, next, earlier, key }
-    document.dispatchEvent(new CustomEvent('dad:render', { detail: { now, next, earlier, key: venueKey(hero) } }));
+    document.dispatchEvent(new CustomEvent('dad:render', { detail: { now, next, earlier, key: currentKey } }));
   }
 
   function renderFresh() {
@@ -1041,8 +1323,9 @@ button { font: inherit; }
         const p = JSON.parse(m.message);
         if (!p || !p.c) return;
         const prev = pulses.get(p.c);
-        if (!prev || prev.t <= m.time) pulses.set(p.c, { s: p.s, v: p.v, t: m.time });
+        if (!prev || prev.t <= m.time) pulses.set(p.c, { s: p.s, v: p.v, g: p.g || '', t: m.time });
         renderCounts();
+        scheduleGroups();
       } catch (e) {}
       return;
     }
@@ -1052,6 +1335,7 @@ button { font: inherit; }
         time: m.time,
         name: String(m.title || 'Someone').slice(0, 24),
         text: String(m.message || '').slice(0, 280),
+        group: ((m.tags || []).find((t) => /^g-/.test(t)) || '').slice(2) || 'all',
       });
       scheduleChat();
     }
@@ -1072,8 +1356,10 @@ button { font: inherit; }
 
   function renderChat() {
     const list = $('chat');
-    const all = [...messages.values()].filter((m) => !isHidden(m)).sort((a, b) => b.time - a.time);
-    const items = pending.concat(all).slice(0, shown);
+    const scope = groupList().length && selected ? chatScope : 'all';
+    const all = [...messages.values()].filter((m) => !isHidden(m) && (scope === 'all' || m.group === selected)).sort((a, b) => b.time - a.time);
+    const mineNow = pending.filter((m) => scope === 'all' || m.group === selected);
+    const items = mineNow.concat(all).slice(0, shown);
     list.textContent = '';
     items.forEach((m) => {
       const li = document.createElement('li');
@@ -1082,6 +1368,8 @@ button { font: inherit; }
       const nm = document.createElement('span'); nm.textContent = m.name;
       const tm = document.createElement('time'); tm.textContent = m.pending ? 'sending…' : fmtTime(m.time);
       who.append(nm, tm);
+      const mg = scope === 'all' && m.group !== 'all' ? groupBy(m.group) : null;
+      if (mg) { const chip = document.createElement('span'); chip.className = 'gchip'; chip.textContent = mg.name; paint(chip, mg); who.append(chip); }
       if (isHost && !m.pending) {
         const b = document.createElement('button'); b.type = 'button'; b.className = 'hostid'; b.textContent = 'ID ' + m.id;
         b.addEventListener('click', () => { navigator.clipboard && navigator.clipboard.writeText(m.id).then(() => { b.textContent = 'Copied'; }, () => {}); });
@@ -1092,8 +1380,24 @@ button { font: inherit; }
       list.append(li);
     });
     $('chat-empty').hidden = items.length > 0;
-    $('chat-older').hidden = all.length + pending.length <= shown;
+    $('chat-older').hidden = all.length + mineNow.length <= shown;
   }
+
+  function renderChatTabs() {
+    const g = groupBy(selected);
+    const on = !!(groupList().length && g);
+    $('chat-tabs').hidden = !on;
+    if (on) {
+      $('tab-group').textContent = g.name;
+      $('tab-group').setAttribute('aria-selected', String(chatScope === 'group'));
+      $('tab-all').setAttribute('aria-selected', String(chatScope === 'all'));
+    }
+    $('chat-text').placeholder = on && chatScope === 'group' ? 'Message ' + g.name : (groupList().length ? 'Message everyone' : 'Say something');
+  }
+  document.querySelectorAll('#chat-tabs button').forEach((b) => b.addEventListener('click', () => {
+    chatScope = b.dataset.scope; shown = CONFIG.pageSize;
+    renderChatTabs(); renderChat();
+  }));
   $('chat-older').addEventListener('click', () => { shown += CONFIG.pageSize; renderChat(); });
 
   // subscribe to both topics over one Server-Sent Events stream
@@ -1104,10 +1408,11 @@ button { font: inherit; }
     es.onmessage = (ev) => { try { onEvent(JSON.parse(ev.data)); } catch (e) {} };
   }
 
-  async function publish(topic, message, title) {
-    if (DEMO) return { id: 'demo' + Date.now(), time: Math.floor(Date.now() / 1000), event: 'message', topic, message, title };
+  async function publish(topic, message, title, tags) {
+    if (DEMO) return { id: 'demo' + Date.now(), time: Math.floor(Date.now() / 1000), event: 'message', topic, message, title, tags };
     const body = { topic, message };
     if (title) body.title = title;
+    if (tags && tags.length) body.tags = tags;
     const r = await fetch(CONFIG.ntfy + '/', { method: 'POST', body: JSON.stringify(body) });
     if (!r.ok) { const err = new Error('publish ' + r.status); err.status = r.status; throw err; }
     return r.json();
@@ -1131,12 +1436,13 @@ button { font: inherit; }
     lastSend = Date.now();
     showErr('');
     store.set('name', name);
-    const temp = { id: 'tmp' + Date.now(), time: Date.now() / 1000, name, text, pending: true };
+    const toGroup = groupList().length && selected && chatScope === 'group' ? selected : null;
+    const temp = { id: 'tmp' + Date.now(), time: Date.now() / 1000, name, text, pending: true, group: toGroup || 'all' };
     pending.unshift(temp);
     textEl.value = '';
     renderChat();
     try {
-      const res = await publish(CONFIG.chatTopic, text, name);
+      const res = await publish(CONFIG.chatTopic, text, name, toGroup ? ['g-' + toGroup] : []);
       mine.add(res.id);
       store.set('mine', [...mine].slice(-200));
       onEvent(res.event ? res : Object.assign({ event: 'message' }, res));
@@ -1154,7 +1460,7 @@ button { font: inherit; }
   // check-ins
   const myPulse = () => store.get('pulse', null);
   function counts() {
-    const key = venueKey(current);
+    const key = currentKey;
     let here = 0, way = 0;
     pulses.forEach((p, c) => {
       if (c === clientId) return;
@@ -1172,12 +1478,12 @@ button { font: inherit; }
     document.querySelectorAll('.check').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === c.me)));
   }
   document.querySelectorAll('.check').forEach((b) => b.addEventListener('click', () => {
-    const key = venueKey(current);
+    const key = currentKey;
     const prev = counts().me;
     const s = prev === b.dataset.k ? 'off' : b.dataset.k;
     store.set('pulse', { s, v: key });
     renderCounts();
-    publish(CONFIG.pulseTopic, JSON.stringify({ c: clientId, s, v: key })).catch(() => {});
+    publish(CONFIG.pulseTopic, JSON.stringify({ c: clientId, s, v: key, g: selected || '' })).catch(() => {});
   }));
 
   /* ---------------- boot ---------------- */
@@ -1186,17 +1492,33 @@ button { font: inherit; }
 
   if (DEMO) {
     const t = Math.floor(Date.now() / 1000);
-    data = { hide: [], stops: [
-      { time: '9:00 PM', venue: 'Larimer Beer Hall', address: '2012 Larimer St', area: 'Ballpark', note: '', status: '' },
-      { time: '10:15 PM', venue: 'Ophelia’s Electric Soapbox', address: '1215 20th St', area: 'Ballpark', note: 'Downstairs. We’re by the stage.', status: '' },
-      { time: '11:30 PM', venue: 'TBD', address: '', area: '', note: 'Ideas in the chat.', status: 'next' },
+    const withGroups = /demo-groups/.test(location.hash + location.search);
+    data = { hide: [], groups: [], stops: [
+      { time: '9:00 PM', venue: 'Larimer Beer Hall', address: '2012 Larimer St', area: 'Ballpark', note: '', status: '', group: '' },
+      { time: '10:15 PM', venue: 'Ophelia’s Electric Soapbox', address: '1215 20th St', area: 'Ballpark', note: 'Downstairs. We’re by the stage.', status: '', group: withGroups ? 'Room 1' : '' },
+      { time: '11:30 PM', venue: 'TBD', address: '', area: '', note: 'Ideas in the chat.', status: 'next', group: withGroups ? 'Room 1' : '' },
     ] };
+    if (withGroups) {
+      data.groups = cleanGroups([
+        { group: 'Room 1', leader: 'Tobin', phone: '(402) 619-7744', signal: '', note: '' },
+        { group: 'Room 2', leader: 'Priya', phone: '(303) 555-0142', signal: '', note: 'Meet by the front patio.' },
+        { group: 'Room 3', leader: 'Jordan', phone: '', signal: '', note: '' },
+      ]);
+      data.stops.push(
+        { time: '10:20 PM', venue: 'Improper City', address: '3201 Walnut St', area: 'RiNo', note: 'Back patio by the fire pits.', status: '', group: 'Room 2' },
+        { time: '10:45 PM', venue: 'Death & Co', address: '1280 25th St', area: 'RiNo', note: '', status: 'next', group: 'Room 3' });
+    }
     render();
-    [['Maya', 'leaving the Hilton reception now, 10 min', -900], ['Jordan', 'is there a cover?', -700],
-     ['Sam', 'someone save me a spot by the stage', -400], ['Priya', 'who’s in for Pete’s Kitchen after', -200], ['Alex', '🫡', -60]]
-      .forEach(([n, m, dt], i) => onEvent({ id: 'd' + i, time: t + dt, event: 'message', topic: CONFIG.chatTopic, title: n, message: m }));
-    const key = venueKey(current);
-    for (let i = 0; i < 32; i++) onEvent({ id: 'p' + i, time: t - 100 + i, event: 'message', topic: CONFIG.pulseTopic, message: JSON.stringify({ c: 'demo' + i, s: i < 23 ? 'here' : 'way', v: key }) });
+    [['Maya', 'leaving the Hilton reception now, 10 min', -900, ''], ['Jordan', 'is there a cover?', -700, 'room-3'],
+     ['Sam', 'someone save me a spot by the stage', -400, 'room-1'], ['Priya', 'who’s in for Pete’s Kitchen after', -200, 'room-2'], ['Alex', '🫡', -60, 'room-1']]
+      .forEach(([n, m, dt, g], i) => onEvent({ id: 'd' + i, time: t + dt, event: 'message', topic: CONFIG.chatTopic, title: n, message: m, tags: withGroups && g ? ['g-' + g] : [] }));
+    const keys = withGroups
+      ? { 'room-1': checkKey(split(stopsFor('room-1')).now, 'room-1'), 'room-2': checkKey(split(stopsFor('room-2')).now, 'room-2'), 'room-3': checkKey(split(stopsFor('room-3')).now, 'room-3') }
+      : null;
+    for (let i = 0; i < 32; i++) {
+      const g = withGroups ? ['room-1', 'room-2', 'room-3'][i % 3] : '';
+      onEvent({ id: 'p' + i, time: t - 100 + i, event: 'message', topic: CONFIG.pulseTopic, message: JSON.stringify({ c: 'demo' + i, s: i < 23 ? 'here' : 'way', v: withGroups ? keys[g] : currentKey, g }) });
+    }
     lastSync = Date.now();
     renderFresh();
     setInterval(() => { lastSync = Date.now(); renderFresh(); }, 5000);
@@ -1278,8 +1600,13 @@ button { font: inherit; }
   // ---- bulbs along the arrow, a run of light that travels toward the tip ----
   const path = document.getElementById('arrow-path');
   const g = document.getElementById('arrow-bulbs');
-  if (path && g && path.getTotalLength) {
-    const L = path.getTotalLength();
+  let built = false;
+  function buildArrow() {
+    if (built || !path || !g || !path.getTotalLength) return;
+    let L = 0;
+    try { L = path.getTotalLength(); } catch (e) { return; }
+    if (!(L > 0) || !path.getBoundingClientRect().width) return;
+    built = true;
     const n = Math.max(6, Math.floor(L / 17));
     const D = 2.1;
     const pts = [];
@@ -1297,6 +1624,8 @@ button { font: inherit; }
       g.append(core, glow);
     });
   }
+  buildArrow();
+  document.addEventListener('dad:render', () => requestAnimationFrame(buildArrow));
 
   // ---- the arrow only shows when there is somewhere to point ----
   const wrap = document.getElementById('arrow-wrap');
