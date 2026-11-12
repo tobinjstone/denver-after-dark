@@ -329,6 +329,16 @@ button { font: inherit; }
 .foot { display: grid; gap: 14px; justify-items: center; text-align: center; padding-top: 8px; }
 .foot .tube { width: 100%; max-width: 340px; }
 .foot p { margin: 0; color: var(--muted); font-size: 14px; text-wrap: balance; }
+.contact { display: grid; justify-items: center; gap: 10px; padding-top: 10px; width: 100%; }
+.contact-name {
+  font-family: var(--f-tube);
+  font-size: 30px;
+  line-height: 1.1;
+  color: var(--red-core);
+  text-shadow: var(--glow-red);
+}
+.contact-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+.foot .tube.small { width: auto; max-width: none; min-height: 46px; font-size: 16px; padding-inline: 18px; }
 
 @media (min-width: 700px) {
   .wrap { max-width: 560px; gap: 48px; padding-block-start: 36px; }
@@ -428,6 +438,13 @@ button { font: inherit; }
 
   <footer class="foot">
     <a class="tube blue" href="https://partiful.com/e/9ouN1xvHTecHt3R3sUa6" target="_blank" rel="noopener">RSVP on Partiful</a>
+    <div class="contact">
+      <span class="contact-name">Tobin Stone</span>
+      <div class="contact-links">
+        <a class="tube small" href="tel:+14026197744">Cell: (402) 619-7744</a>
+        <a class="tube small" href="https://signal.me/#eu/lgzPyzizJplxlrE0gIJtOZObRm3jjp5O85V7gKiVjMiCcDsTip1In7R1XeK94l3E" target="_blank" rel="noopener">Signal</a>
+      </div>
+    </div>
     <p>Unofficial. Not affiliated with What’s Next. Thursday, Nov 12.</p>
     <p id="host-tools" hidden><a href="https://docs.google.com/spreadsheets/d/1YTedVYSWeLrRCX_F3eUwHXh62TK4iZxq3XXNOzWIrLk/edit" target="_blank" rel="noopener">Edit the sheet</a></p>
   </footer>
