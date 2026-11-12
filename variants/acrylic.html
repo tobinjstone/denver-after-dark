@@ -13,45 +13,49 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#151113">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151113'/%3E%3Cpath d='M8 46 L20 34 L27 38 L38 22 L45 28 L56 18' fill='none' stroke='%23ff6a3d' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0e1b16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1b16'/%3E%3Cpath d='M8 46 L20 34 L27 38 L38 22 L45 28 L56 18' fill='none' stroke='%23ff8a73' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tilt+Neon&family=Yellowtail&family=Barlow:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Neonderthaw&family=Quicksand:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: one sign-lit column on a painted cinderblock wall. The current venue is the lit tube;
-   past stops hang as unlit glass; supporting signage glows cool blue.
-   Color: warm argon-red tube for the venue, mercury-blue tube for signage, warm off-white text.
-   Type: Tilt Neon (tube lettering), Yellowtail (script signage), Barlow (crisp body / UI). */
+/* Layout: clear acrylic panels floating a few px off a deep-green plaster wall, one LED-flex color per sign.
+   Color: forest plaster wall; pastel LED flex (coral, mint, lilac, butter); milky unlit tube for stops we left.
+   Type: Neonderthaw (monoline LED script), Quicksand (rounded LED sans for numbers and plaques), Figtree (crisp info). */
 :root {
   color-scheme: dark;
-  --wall: #151113;
-  --ink: #f0e7df;
-  --muted: #a99d95;
-  --field: rgba(8, 6, 7, .72);
-  --edge: #3d3639;
+  --wall: #0e1b16;
+  --ink: #f4efe8;
+  --muted: #a9bab1;
+  --faint: #7f948a;
+  --line: rgba(255, 255, 255, .14);
+  --off: rgba(236, 229, 218, .4);
 
-  --red: #ff5a2c;
-  --red-deep: #ff2b0f;
-  --red-core: #fff0e4;
-  --red-off: #5c2c22;
+  --coral: #ff8a73;  --coral-tint: #ffe3da;
+  --mint: #5ff0bf;   --mint-tint: #dcfff0;
+  --lilac: #c2a0ff;  --lilac-tint: #f0e6ff;
+  --butter: #ffd665; --butter-tint: #fff4cc;
 
-  --blue: #45aaff;
-  --blue-deep: #1767ff;
-  --blue-core: #eaf5ff;
+  --led: var(--coral);
+  --tint: var(--coral-tint);
 
-  --green: #5dff9c;
-  --warn: #ffb36b;
-  --unlit: #7b7074;
+  --f-led: "Neonderthaw", "Sacramento", "Brush Script MT", cursive;
+  --f-round: "Quicksand", "Varela Round", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --f-body: "Figtree", "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+.c-coral  { --led: var(--coral);  --tint: var(--coral-tint); }
+.c-mint   { --led: var(--mint);   --tint: var(--mint-tint); }
+.c-lilac  { --led: var(--lilac);  --tint: var(--lilac-tint); }
+.c-butter { --led: var(--butter); --tint: var(--butter-tint); }
 
-  --glow-red: 0 0 1px #fff7f0, 0 0 4px var(--red), 0 0 10px var(--red), 0 0 22px var(--red-deep), 0 0 46px var(--red-deep);
-  --glow-blue: 0 0 1px #f6fbff, 0 0 4px var(--blue), 0 0 10px var(--blue), 0 0 22px var(--blue-deep);
-  --tube-red: 0 0 3px var(--red), 0 0 10px var(--red-deep), inset 0 0 5px var(--red);
-  --tube-blue: 0 0 3px var(--blue), 0 0 10px var(--blue-deep), inset 0 0 5px var(--blue);
-
-  --f-tube: "Tilt Neon", "Arial Rounded MT Bold", "Varela Round", system-ui, sans-serif;
-  --f-script: "Yellowtail", "Brush Script MT", cursive;
-  --f-body: "Barlow", "Helvetica Neue", Arial, system-ui, sans-serif;
+/* LED glow recipes resolve against whatever --led the element carries */
+:where(.panel, .plaque, .tube, .check, .led, .led-stroke, .hd, .note, .fine, .bubble, .field, .contact-name, .dot) {
+  --glow: 0 0 1px var(--tint), 0 0 4px var(--led), 0 0 10px var(--led),
+          0 0 22px color-mix(in srgb, var(--led) 55%, transparent),
+          0 0 46px color-mix(in srgb, var(--led) 28%, transparent);
+  --edge: 0 0 2px var(--led), 0 0 7px color-mix(in srgb, var(--led) 75%, transparent),
+          0 0 18px color-mix(in srgb, var(--led) 35%, transparent),
+          inset 0 0 5px color-mix(in srgb, var(--led) 55%, transparent);
 }
 
 * { box-sizing: border-box; }
@@ -62,202 +66,272 @@ body {
   color: var(--ink);
   font-family: var(--f-body);
   font-size: 16px;
-  line-height: 1.45;
+  line-height: 1.5;
   background-color: var(--wall);
   background-image:
-    radial-gradient(130% 70% at 50% 0%, transparent 35%, rgba(0, 0, 0, .55) 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%23161214'/%3E%3Crect x='61.5' y='1.5' width='57' height='27' fill='%23181316'/%3E%3Crect x='1.5' y='31.5' width='27' height='27' fill='%23141012'/%3E%3Crect x='31.5' y='31.5' width='57' height='27' fill='%23171315'/%3E%3Cpath d='M0 .75H120M0 30.75H120M.75 0V30M60.75 0V30M30.75 30V60M90.75 30V60' stroke='%230c0a0b' stroke-width='1.5'/%3E%3C/svg%3E");
+    radial-gradient(110% 55% at 50% 0%, rgba(48, 98, 78, .32), transparent 62%),
+    radial-gradient(140% 80% at 50% 115%, rgba(0, 0, 0, .55), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .95 0 0 0 0 .86 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.009' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .42 0 0 0 0 .33 0 0 0 .3 -.07'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
 }
 [hidden] { display: none !important; }
 a { color: inherit; }
 button { font: inherit; }
-:focus-visible { outline: 2px solid var(--blue-core); outline-offset: 3px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--mint-tint); outline-offset: 3px; border-radius: 8px; }
 
 .wrap {
-  max-width: 520px;
+  max-width: 540px;
   margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: max(18px, env(safe-area-inset-top, 0px)) max(40px, env(safe-area-inset-bottom, 0px));
+  padding-block: max(22px, env(safe-area-inset-top, 0px)) max(48px, env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 30px;
 }
 
-/* ---------- header ---------- */
-.mast { display: grid; justify-items: center; gap: 2px; }
-.skyline { width: 100%; height: auto; display: block; overflow: visible;
-  filter: drop-shadow(0 0 2px var(--blue)) drop-shadow(0 0 8px var(--blue-deep)); }
-.skyline path { fill: none; stroke: var(--blue-core); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-.skyline .clip { stroke: #2a2f3a; stroke-width: 3; }
+/* ---------- acrylic panel ---------- */
+.panel {
+  position: relative;
+  isolation: isolate;
+  padding: 28px 24px 26px;
+  border-radius: 22px;
+  background: linear-gradient(158deg, rgba(255, 255, 255, .095) 0%, rgba(255, 255, 255, .03) 34%, rgba(255, 255, 255, .018) 64%, rgba(255, 255, 255, .065) 100%);
+  border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .24),
+    inset 1px 0 0 rgba(255, 255, 255, .07),
+    inset 0 -1px 0 rgba(255, 255, 255, .05),
+    0 1px 0 rgba(0, 0, 0, .35),
+    0 24px 34px -20px rgba(0, 0, 0, .8),
+    0 8px 14px -8px rgba(0, 0, 0, .5);
+  transform: perspective(1100px) translate3d(0, var(--py, 0px), 0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .6s cubic-bezier(.2, .7, .2, 1);
+}
+.panel::before { /* reflections in the sheet */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 20%, rgba(255, 255, 255, .075) 28%, transparent 36%, transparent 60%, rgba(255, 255, 255, .035) 66%, transparent 72%);
+}
+.panel::after { /* light spilling onto the wall */
+  content: "";
+  position: absolute;
+  inset: -36px -6px;
+  z-index: -1;
+  border-radius: 60px;
+  pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--led) 20%, transparent), transparent);
+}
+.bolts { /* four brass standoffs */
+  position: absolute;
+  inset: 9px;
+  z-index: 2;
+  pointer-events: none;
+  --b: radial-gradient(circle at 40% 36%, #fffaf0 0 .7px, #f3e2b8 1.6px, #cfab63 3.3px, #8c6b31 5px, #4b3815 6px, rgba(0, 0, 0, 0) 6.7px);
+  background: var(--b) left top / 14px 14px no-repeat, var(--b) right top / 14px 14px no-repeat,
+              var(--b) left bottom / 14px 14px no-repeat, var(--b) right bottom / 14px 14px no-repeat;
+  filter: drop-shadow(1px 2px 1.5px rgba(0, 0, 0, .6));
+}
+.bolts.top { background: var(--b) left top / 14px 14px no-repeat, var(--b) right top / 14px 14px no-repeat; }
+
+/* ---------- LED type ---------- */
+.led { color: var(--tint); text-shadow: var(--glow); }
+.led-stroke { color: var(--tint); filter: drop-shadow(0 0 2px var(--led)) drop-shadow(0 0 7px var(--led)) drop-shadow(0 0 16px color-mix(in srgb, var(--led) 45%, transparent)); }
+.led-stroke path, .icon path, .icon circle, .icon line { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- header sign ---------- */
+.mast { display: grid; justify-items: center; gap: 0; padding-block: 26px 18px; }
+.skyline { width: 100%; height: auto; display: block; overflow: visible; }
+.skyline path { stroke-width: 3.4; }
 .brand {
-  margin: 0;
-  font-family: var(--f-script);
+  margin: -4px 0 0;
+  font-family: var(--f-led);
   font-weight: 400;
-  font-size: clamp(34px, 10vw, 46px);
-  line-height: 1.1;
-  color: var(--blue-core);
-  text-shadow: var(--glow-blue);
-  transform: rotate(-3deg);
+  font-size: clamp(48px, 14vw, 66px);
+  line-height: 1.05;
+  text-align: center;
+  text-wrap: balance;
+  transform: rotate(-4deg);
+  padding-bottom: .08em;
 }
 
 /* ---------- hero sign ---------- */
-.hero { position: relative; isolation: isolate; display: grid; gap: 18px; }
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: -60px 0 -30px;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(60% 55% at 50% 42%, rgba(255, 74, 30, .2), transparent 70%);
+.hero { position: relative; display: grid; gap: 16px; }
+.sign-panel { display: grid; gap: 16px; padding-top: 30px; }
+.sign-row { display: flex; align-items: center; justify-content: space-between; gap: 10px 12px; flex-wrap: wrap; }
+.plaque {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px 7px;
+  border-radius: 999px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .11), rgba(255, 255, 255, .03));
+  border: 1px solid rgba(255, 255, 255, .16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 6px 10px -6px rgba(0, 0, 0, .7);
 }
-.sign-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .open-sign {
-  display: inline-flex; align-items: center;
-  padding: 6px 14px 5px;
-  border: 2px solid var(--blue-core);
-  border-radius: 10px;
-  box-shadow: var(--tube-blue);
-  font-family: var(--f-tube);
-  font-size: 20px;
-  letter-spacing: .08em;
-  color: var(--red-core);
-  text-shadow: var(--glow-red);
+  font-family: var(--f-round);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .14em;
   text-transform: uppercase;
+  line-height: 1;
 }
 .fresh { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
-.fresh b { color: var(--ink); font-weight: 600; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2.4s ease-in-out infinite; }
-.fresh.stale .dot { background: var(--warn); box-shadow: 0 0 6px var(--warn); animation: none; }
-@keyframes pulse { 50% { opacity: .35; } }
+.dot { --led: var(--mint); --tint: var(--mint-tint); width: 8px; height: 8px; border-radius: 50%; background: var(--tint); box-shadow: 0 0 4px var(--led), 0 0 10px var(--led); animation: breathe 3s ease-in-out infinite; }
+.fresh.stale .dot { --led: var(--butter); --tint: var(--butter-tint); animation: none; }
+@keyframes breathe { 50% { opacity: .45; } }
 
 .venue {
-  margin: 0;
-  font-family: var(--f-tube);
+  margin: 4px 0 0;
+  font-family: var(--f-led);
   font-weight: 400;
-  line-height: .98;
-  color: var(--red-core);
-  text-shadow: var(--glow-red);
+  line-height: 1.12;
   text-wrap: balance;
   overflow-wrap: anywhere;
-  font-size: clamp(64px, 20vw, 92px);
-  letter-spacing: -.01em;
+  font-size: clamp(76px, 23vw, 108px);
+  padding-bottom: .06em;
 }
-.venue[data-size="l"] { font-size: clamp(50px, 15vw, 72px); }
-.venue[data-size="m"] { font-size: clamp(40px, 12vw, 58px); }
-.venue[data-size="s"] { font-size: clamp(32px, 9.5vw, 46px); }
-.venue.strike { animation: strike 2.2s linear 1 both; }
-.buzz { animation: buzz 4.3s linear 2.4s infinite; }
+.venue[data-size="l"] { font-size: clamp(60px, 18vw, 86px); }
+.venue[data-size="m"] { font-size: clamp(50px, 14.5vw, 70px); }
+.venue[data-size="s"] { font-size: clamp(40px, 11.5vw, 56px); }
+.venue.strike { animation: ledon 1.8s cubic-bezier(.25, .6, .2, 1) both; }
+@keyframes ledon {
+  0%   { color: var(--off); text-shadow: 0 1px 0 rgba(0, 0, 0, .35); }
+  30%  { color: color-mix(in srgb, var(--tint) 55%, var(--off)); text-shadow: 0 0 2px var(--led), 0 0 7px color-mix(in srgb, var(--led) 40%, transparent); }
+  100% { color: var(--tint); text-shadow: var(--glow); }
+}
+.sign-panel.ignite::after { animation: spillon 1.8s cubic-bezier(.25, .6, .2, 1) both; }
+@keyframes spillon { from { opacity: 0; } to { opacity: 1; } }
 
-@keyframes strike {
-  0%   { color: var(--red-off); text-shadow: none; }
-  7%   { color: var(--red-core); text-shadow: var(--glow-red); }
-  9%   { color: var(--red-off); text-shadow: none; }
-  15%  { color: var(--red-off); text-shadow: none; }
-  17%  { color: var(--red-core); text-shadow: var(--glow-red); }
-  19%  { color: var(--red-off); text-shadow: 0 0 6px var(--red-deep); }
-  27%  { color: var(--red-core); text-shadow: var(--glow-red); }
-  44%  { color: var(--red-core); text-shadow: var(--glow-red); }
-  46%  { color: #c9a294; text-shadow: 0 0 4px var(--red), 0 0 12px var(--red-deep); }
-  49%  { color: var(--red-core); text-shadow: var(--glow-red); }
-  100% { color: var(--red-core); text-shadow: var(--glow-red); }
-}
-@keyframes buzz {
-  0%, 58%, 61%, 64%, 100% { opacity: 1; }
-  59%, 60% { opacity: .55; }
-  62%, 63% { opacity: .72; }
-}
-
-.where { display: grid; gap: 4px; font-size: 18px; justify-items: start; }
+.where { display: grid; gap: 2px; justify-items: start; }
 .addr {
   padding: 0; border: 0; background: none; color: var(--ink);
-  font: 600 20px/1.3 var(--f-body);
+  font: 600 20px/1.35 var(--f-body);
   text-align: left;
-  text-decoration: underline dotted rgba(240, 231, 223, .45);
+  text-decoration: underline dotted rgba(244, 239, 232, .45);
   text-underline-offset: 5px;
   cursor: pointer;
   min-height: 32px;
 }
-.addr .copied { font-weight: 500; font-size: 14px; color: var(--green); margin-left: 8px; text-decoration: none; display: inline-block; }
-.where .meta { color: var(--muted); }
+.addr .copied { font-weight: 600; font-size: 14px; color: var(--mint-tint); margin-left: 8px; text-decoration: none; display: inline-block; }
+.where .meta { color: var(--muted); font-size: 17px; }
 .note {
-  margin: 4px 0 0;
-  padding-left: 14px;
-  border-left: 2px solid var(--red);
+  position: relative;
+  margin: 0;
+  padding-left: 16px;
   font-size: 18px;
-  color: var(--ink);
   overflow-wrap: anywhere;
   text-wrap: pretty;
 }
+.note::before, .fine::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 4px; bottom: 4px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--tint);
+  box-shadow: 0 0 3px var(--led), 0 0 9px var(--led);
+}
 
-/* ---------- tube buttons ---------- */
+/* ---------- LED flex pills ---------- */
 .go { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; }
 .tube {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 52px;
   padding: 10px 14px;
   border-radius: 999px;
-  border: 2px solid var(--red-core);
-  box-shadow: var(--tube-red);
-  background: rgba(255, 60, 20, .06);
+  border: 2px solid var(--tint);
+  box-shadow: var(--edge);
+  background: color-mix(in srgb, var(--led) 7%, transparent);
   color: var(--ink);
   font: 600 17px/1 var(--f-body);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color .15s, box-shadow .15s;
+  transition: background-color .15s, transform .15s;
 }
-.tube:hover { background: rgba(255, 60, 20, .14); }
-.tube.blue { border-color: var(--blue-core); box-shadow: var(--tube-blue); background: rgba(40, 130, 255, .06); }
-.tube.blue:hover { background: rgba(40, 130, 255, .14); }
+.tube:hover { background: color-mix(in srgb, var(--led) 16%, transparent); }
+.tube:active { transform: scale(.97); }
+.tube.blue { --led: var(--mint); --tint: var(--mint-tint); }
 .tube:disabled { opacity: .5; cursor: default; }
+.caveat { margin: 0; font-size: 14px; color: var(--muted); }
+.caveat a { color: var(--ink); text-underline-offset: 3px; white-space: nowrap; }
 
-.checkin { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* power cord, trailing off the right edge */
+.cord {
+  position: absolute;
+  left: 100%;
+  top: 64%;
+  width: calc((100vw - 100%) / 2);
+  height: 170px;
+  z-index: -1;
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(2px 4px 2.5px rgba(0, 0, 0, .55));
+}
+.cord path { fill: none; stroke: #e9e3d8; stroke-width: 3.2; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.jack {
+  position: absolute;
+  left: calc(100% - 3px);
+  top: calc(64% - 5px);
+  width: 12px; height: 14px;
+  border-radius: 3px;
+  z-index: -1;
+  background: linear-gradient(90deg, #cfc8bc, #f6f1e8 45%, #bdb5a8);
+  box-shadow: 1px 3px 3px rgba(0, 0, 0, .5);
+}
+
+/* ---------- check-in plaques ---------- */
+.checkin { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .check {
-  display: grid; justify-items: center; gap: 2px;
-  min-height: 84px;
-  padding: 12px 10px;
+  display: grid; justify-items: center; gap: 4px;
+  min-height: 110px;
+  padding: 24px 10px 16px;
   border-radius: 18px;
-  border: 2px solid #3a3336;
-  background: var(--field);
   color: var(--ink);
   font: 600 16px/1.2 var(--f-body);
   cursor: pointer;
-  transition: border-color .2s, box-shadow .2s, background-color .2s;
 }
 .check .n {
-  font-family: var(--f-tube);
-  font-weight: 400;
-  font-size: 36px;
+  font-family: var(--f-round);
+  font-weight: 700;
+  font-size: 46px;
   line-height: 1;
+  color: var(--tint);
+  text-shadow: var(--glow);
   font-variant-numeric: tabular-nums;
 }
-.check[data-k="here"] .n { color: var(--red-core); text-shadow: var(--glow-red); }
-.check[data-k="way"] .n { color: var(--blue-core); text-shadow: var(--glow-blue); }
-.check[aria-pressed="true"][data-k="here"] { border-color: var(--red-core); box-shadow: var(--tube-red); background: rgba(255, 60, 20, .1); }
-.check[aria-pressed="true"][data-k="way"] { border-color: var(--blue-core); box-shadow: var(--tube-blue); background: rgba(40, 130, 255, .1); }
+.check[aria-pressed="true"] { border: 2px solid var(--tint); box-shadow: var(--edge), 0 24px 34px -20px rgba(0, 0, 0, .8); background: color-mix(in srgb, var(--led) 12%, rgba(255, 255, 255, .04)); }
 
-/* ---------- script signage headings ---------- */
+/* ---------- headings ---------- */
 .hd {
-  margin: 0 0 14px;
-  font-family: var(--f-script);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-family: var(--f-led);
   font-weight: 400;
-  font-size: 34px;
-  line-height: 1;
-  color: var(--blue-core);
-  text-shadow: var(--glow-blue);
+  font-size: 44px;
+  line-height: 1.15;
+  color: var(--tint);
+  text-shadow: var(--glow);
 }
+.hd .icon { width: 32px; height: 32px; flex: none; }
+.icon { color: var(--tint); filter: drop-shadow(0 0 2px var(--led)) drop-shadow(0 0 7px var(--led)); }
+.icon path, .icon circle, .icon line { stroke-width: 1.8; }
 
 /* ---------- next ---------- */
 .next { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .clock {
-  font-family: var(--f-tube);
+  font-family: var(--f-round);
+  font-weight: 600;
   font-size: 54px;
   line-height: 1;
-  color: var(--blue-core);
-  text-shadow: var(--glow-blue);
   font-variant-numeric: tabular-nums;
 }
-.clock small { font-size: 22px; margin-left: 4px; }
+.clock small { font-size: 20px; margin-left: 4px; font-weight: 700; }
 .next p { margin: 0; font-size: 18px; min-width: 0; flex: 1 1 160px; overflow-wrap: anywhere; }
 .next p span { color: var(--muted); display: block; font-size: 16px; }
 
@@ -269,144 +343,156 @@ button { font: inherit; }
   min-height: 50px;
   padding: 12px 16px;
   border-radius: 14px;
-  border: 1.5px solid var(--edge);
-  background: var(--field);
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(0, 0, 0, .28);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .35);
   color: var(--ink);
   font: 500 17px/1.2 var(--f-body);
 }
-.field::placeholder { color: #85797f; }
-.field:focus { outline: none; border-color: var(--blue-core); box-shadow: 0 0 2px var(--blue), 0 0 8px var(--blue-deep); }
+.field::placeholder { color: var(--faint); }
+.field:focus { outline: none; --led: var(--mint); --tint: var(--mint-tint); border-color: var(--tint); box-shadow: var(--edge); }
 .field.name { max-width: 220px; min-height: 44px; font-size: 15px; padding-block: 10px; }
 .compose .tube { min-width: 88px; }
-.compose-err { margin: 0; font-size: 14px; color: var(--warn); }
+.compose-err { margin: 0; font-size: 14px; color: var(--butter-tint); }
 
 .chat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 .msg { display: grid; gap: 4px; justify-items: start; max-width: 86%; }
-.msg .who { font-size: 13px; font-weight: 600; color: var(--muted); padding-left: 14px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-.msg .who time { font-weight: 500; color: #7f7479; font-variant-numeric: tabular-nums; }
+.msg .who { font-size: 13px; font-weight: 600; color: var(--muted); padding-left: 12px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.msg .who time { font-weight: 500; color: var(--faint); font-variant-numeric: tabular-nums; }
 .msg .bubble {
   padding: 10px 14px;
   border-radius: 18px 18px 18px 6px;
-  border: 1.5px solid var(--blue-core);
-  box-shadow: 0 0 2px var(--blue), 0 0 7px var(--blue-deep), inset 0 0 4px rgba(69, 170, 255, .5);
-  background: rgba(8, 10, 16, .55);
+  background: linear-gradient(160deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .04));
+  border: 1px solid rgba(255, 255, 255, .13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16);
   font-size: 17px;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 .msg.me { justify-self: end; justify-items: end; }
-.msg.me .who { padding: 0 14px 0 0; }
-.msg.me .bubble { border-radius: 18px 18px 6px 18px; border-color: var(--red-core); box-shadow: 0 0 2px var(--red), 0 0 7px var(--red-deep), inset 0 0 4px rgba(255, 90, 44, .5); }
+.msg.me .who { padding: 0 12px 0 0; }
+.msg.me .bubble { --led: var(--coral); --tint: var(--coral-tint); border-radius: 18px 18px 6px 18px; border: 1.5px solid var(--tint); box-shadow: var(--edge); background: color-mix(in srgb, var(--led) 9%, transparent); }
 .msg.pending .bubble { opacity: .6; }
-.hostid { border: 1px solid var(--edge); background: none; color: var(--muted); border-radius: 6px; font-size: 12px; padding: 2px 6px; cursor: pointer; }
+.hostid { border: 1px solid var(--line); background: none; color: var(--muted); border-radius: 6px; font-size: 12px; padding: 2px 6px; cursor: pointer; }
 .chat-empty { color: var(--muted); margin: 0; }
 .older { margin-top: 16px; background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 8px 0; font-size: 15px; }
 
-/* ---------- earlier: unlit glass ---------- */
+/* ---------- earlier: unlit LED ---------- */
 .earlier { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
-.earlier li { display: grid; grid-template-columns: 74px 1fr; gap: 12px; align-items: baseline; }
-.earlier time { color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; }
+.earlier li { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: baseline; }
+.earlier time { font-family: var(--f-round); font-weight: 600; color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; }
 .earlier .glass {
-  font-family: var(--f-tube);
-  font-size: 26px;
-  line-height: 1.05;
-  color: var(--unlit);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, .07), 0 -1px 0 rgba(0, 0, 0, .6);
+  font-family: var(--f-led);
+  font-size: 36px;
+  line-height: 1.15;
+  color: var(--off);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .06), 0 2px 3px rgba(0, 0, 0, .45);
   overflow-wrap: anywhere;
   min-width: 0;
 }
-.earlier .hood { display: block; font-family: var(--f-body); font-size: 15px; color: var(--muted); margin-top: 2px; }
-
-.caveat { margin: -4px 0 0; font-size: 14px; color: var(--muted); }
-.caveat a { color: var(--ink); text-underline-offset: 3px; white-space: nowrap; }
+.earlier .hood { display: block; font-family: var(--f-body); font-size: 15px; color: var(--muted); margin-top: 2px; text-shadow: none; }
 
 /* ---------- fine print ---------- */
-.fine { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 2px solid var(--unlit); display: grid; gap: 12px; font-size: 16px; color: var(--muted); }
-.fine b { color: var(--ink); font-weight: 600; }
+.fine { position: relative; list-style: none; margin: 0; padding: 0 0 0 18px; display: grid; gap: 12px; font-size: 16px; color: var(--muted); }
+.fine b { color: var(--ink); font-weight: 700; }
 #fine-print { scroll-margin-top: 24px; }
 
-/* ---------- footer ---------- */
-.foot { display: grid; gap: 14px; justify-items: center; text-align: center; padding-top: 8px; }
+/* ---------- footer sign ---------- */
+.foot { display: grid; gap: 16px; justify-items: center; text-align: center; padding-top: 30px; }
 .foot .tube { width: 100%; max-width: 340px; }
 .foot p { margin: 0; color: var(--muted); font-size: 14px; text-wrap: balance; }
-.contact { display: grid; justify-items: center; gap: 10px; padding-top: 10px; width: 100%; }
+.contact { display: grid; justify-items: center; gap: 10px; padding-top: 6px; width: 100%; }
 .contact-name {
-  font-family: var(--f-tube);
-  font-size: 30px;
-  line-height: 1.1;
-  color: var(--red-core);
-  text-shadow: var(--glow-red);
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--f-led);
+  font-size: 44px;
+  line-height: 1.15;
+  color: var(--tint);
+  text-shadow: var(--glow);
 }
+.contact-name .icon { width: 28px; height: 28px; }
 .contact-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
 .foot .tube.small { width: auto; max-width: none; min-height: 46px; font-size: 16px; padding-inline: 18px; }
 
 @media (min-width: 700px) {
-  .wrap { max-width: 560px; gap: 48px; padding-block-start: 36px; }
+  .wrap { gap: 38px; padding-block-start: 44px; }
+  .panel { padding: 32px 30px 30px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .venue.strike, .buzz, .dot { animation: none; }
-  .tube, .check { transition: none; }
+  .venue.strike, .sign-panel.ignite::after, .dot { animation: none; }
+  .panel, .tube { transition: none; }
+  .panel { transform: none; }
 }
 </style>
 </head>
 <body>
 <main class="wrap">
 
-  <header class="mast">
-    <svg class="skyline" viewBox="0 0 400 92" role="img" aria-label="Front Range skyline">
+  <header class="mast panel c-lilac">
+    <span class="bolts" aria-hidden="true"></span>
+    <svg class="skyline led-stroke c-mint" viewBox="0 0 400 92" role="img" aria-label="Front Range skyline">
       <path d="M6 82 L34 70 L50 74 L76 52 L88 47 L102 56 L126 62"/>
       <path d="M134 60 L154 49 L176 34 L190 40 L208 29 L224 41 L246 53 L262 47"/>
       <path d="M270 45 L290 31 L301 21 L313 20 L324 27 L334 24 L350 41 L370 55 L394 66"/>
-      <path class="clip" d="M128 61.5 L132 60.5 M264 46.5 L268 45.5"/>
     </svg>
-    <h1 class="brand">Denver After Dark</h1>
+    <h1 class="brand led">Denver After Dark</h1>
   </header>
 
   <section class="hero" aria-labelledby="venue">
-    <div class="sign-row">
-      <span class="open-sign" id="sign">Starts 9:00 PM</span>
-      <span class="fresh" id="fresh" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="fresh-text">Live</span></span>
+    <div class="panel sign-panel c-coral ignite" id="sign-panel">
+      <span class="bolts" aria-hidden="true"></span>
+      <span class="jack" aria-hidden="true"></span>
+      <svg class="cord" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4 C 22 4, 30 26, 44 52 S 78 96, 100 100"/></svg>
+
+      <div class="sign-row">
+        <span class="plaque c-butter"><span class="open-sign led" id="sign">Starts 9:00 PM</span></span>
+        <span class="fresh" id="fresh" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="fresh-text">Live</span></span>
+      </div>
+
+      <h2 class="venue led strike" id="venue" data-size="xl">Soon</h2>
+
+      <div class="where" id="where" hidden>
+        <button class="addr" id="addr" type="button" title="Copy address"></button>
+        <span class="meta" id="meta"></span>
+      </div>
+      <p class="note" id="note">Starting spot drops soon.</p>
+
+      <nav class="go" id="go" aria-label="Get there" hidden>
+        <a class="tube" id="go-maps" href="#" target="_blank" rel="noopener">Directions</a>
+        <a class="tube" id="go-uber" href="#" target="_blank" rel="noopener">Uber</a>
+        <a class="tube" id="go-lyft" href="https://ride.lyft.com/" target="_blank" rel="noopener">Lyft</a>
+      </nav>
+
+      <p class="caveat">Unofficial and unreserved. Space might be limited. <a href="#fine-print">Fine print</a></p>
     </div>
-
-    <h2 class="venue strike" id="venue" data-size="xl">Soon</h2>
-
-    <div class="where" id="where" hidden>
-      <button class="addr" id="addr" type="button" title="Copy address"></button>
-      <span class="meta" id="meta"></span>
-    </div>
-    <p class="note" id="note">Starting spot drops soon.</p>
-
-    <nav class="go" id="go" aria-label="Get there" hidden>
-      <a class="tube" id="go-maps" href="#" target="_blank" rel="noopener">Directions</a>
-      <a class="tube" id="go-uber" href="#" target="_blank" rel="noopener">Uber</a>
-      <a class="tube" id="go-lyft" href="https://ride.lyft.com/" target="_blank" rel="noopener">Lyft</a>
-    </nav>
-
-    <p class="caveat">Unofficial and unreserved. Space might be limited. <a href="#fine-print">Fine print</a></p>
 
     <div class="checkin">
-      <button class="check" type="button" data-k="here" aria-pressed="false">
+      <button class="check panel c-coral" type="button" data-k="here" aria-pressed="false">
+        <span class="bolts top" aria-hidden="true"></span>
         <span class="n" id="n-here">0</span>
         <span>I’m here</span>
       </button>
-      <button class="check" type="button" data-k="way" aria-pressed="false">
+      <button class="check panel c-lilac" type="button" data-k="way" aria-pressed="false">
+        <span class="bolts top" aria-hidden="true"></span>
         <span class="n" id="n-way">0</span>
         <span>On my way</span>
       </button>
     </div>
   </section>
 
-  <section id="next-sec" aria-labelledby="h-next" hidden>
-    <h2 class="hd" id="h-next">Up next</h2>
+  <section id="next-sec" class="panel c-butter" aria-labelledby="h-next" hidden>
+    <span class="bolts" aria-hidden="true"></span>
+    <h2 class="hd" id="h-next"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M15 4 C16 11.5 19.5 15 27 16 C19.5 17 16 20.5 15 28 C14 20.5 10.5 17 3 16 C10.5 15 14 11.5 15 4 Z"/><path d="M26 3.5 V9.5 M23 6.5 H29"/></svg>Up next</h2>
     <div class="next">
-      <span class="clock" id="next-clock"></span>
+      <span class="clock led" id="next-clock"></span>
       <p id="next-text"></p>
     </div>
   </section>
 
-  <section aria-labelledby="h-chat">
-    <h2 class="hd" id="h-chat">Bar talk</h2>
+  <section class="panel c-mint" aria-labelledby="h-chat">
+    <span class="bolts" aria-hidden="true"></span>
+    <h2 class="hd" id="h-chat"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 9 H27 C27 15 22 19 16 19 C10 19 5 15 5 9 Z"/><path d="M16 19 V27.5 M10.5 28 H21.5"/><path d="M21.5 9 L24.5 3.8"/><circle cx="25.4" cy="3.2" r="1.6"/></svg>Bar talk</h2>
     <form class="compose" id="compose" autocomplete="off">
       <input class="field name" id="chat-name" name="name" type="text" maxlength="24" placeholder="Your name" aria-label="Your name" required>
       <div class="row">
@@ -420,12 +506,14 @@ button { font: inherit; }
     <button class="older" id="chat-older" type="button" hidden>Show older messages</button>
   </section>
 
-  <section id="earlier-sec" aria-labelledby="h-earlier" hidden>
+  <section id="earlier-sec" class="panel c-lilac" aria-labelledby="h-earlier" hidden>
+    <span class="bolts" aria-hidden="true"></span>
     <h2 class="hd" id="h-earlier">Earlier tonight</h2>
     <ol class="earlier" id="earlier"></ol>
   </section>
 
-  <section id="fine-print" aria-labelledby="h-fine">
+  <section id="fine-print" class="panel c-coral" aria-labelledby="h-fine">
+    <span class="bolts" aria-hidden="true"></span>
     <h2 class="hd" id="h-fine">Fine print</h2>
     <ul class="fine">
       <li><b>This is not official programming.</b> This isn’t a What’s Next event or part of the conference program. I just wanted to get people together to hit the town after the happy hours ended, and apparently a LOT of you liked that idea.</li>
@@ -436,10 +524,11 @@ button { font: inherit; }
     </ul>
   </section>
 
-  <footer class="foot">
+  <footer class="foot panel c-mint">
+    <span class="bolts" aria-hidden="true"></span>
     <a class="tube blue" href="https://partiful.com/e/9ouN1xvHTecHt3R3sUa6" target="_blank" rel="noopener">RSVP on Partiful</a>
-    <div class="contact">
-      <span class="contact-name">Tobin Stone</span>
+    <div class="contact c-coral">
+      <span class="contact-name">Tobin Stone<svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 27 C7 20.5 3.5 15.8 3.5 11 C3.5 7.3 6.3 4.8 9.6 4.8 C12.3 4.8 14.6 6.4 16 8.8 C17.4 6.4 19.7 4.8 22.4 4.8 C25.7 4.8 28.5 7.3 28.5 11 C28.5 15.8 25 20.5 16 27 Z"/></svg></span>
       <div class="contact-links">
         <a class="tube small" href="tel:+14026197744">Cell: (402) 619-7744</a>
         <a class="tube small" href="https://signal.me/#eu/lgzPyzizJplxlrE0gIJtOZObRm3jjp5O85V7gKiVjMiCcDsTip1In7R1XeK94l3E" target="_blank" rel="noopener">Signal</a>
@@ -879,6 +968,51 @@ button { font: inherit; }
       if (!document.hidden) { load(); if (!es || es.readyState === 2) connect(); }
     });
   }
+})();
+</script>
+<script>
+/* Acrylic decor: gentle parallax tilt on scroll / pointer, and the hero's light spill re-powering when the venue changes. */
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const signPanel = document.getElementById('sign-panel');
+  let raf = 0;
+  let px = 0.5;
+  let lastKey = null;
+
+  function frame() {
+    raf = 0;
+    if (reduce.matches || document.hidden) return;
+    const vh = innerHeight || 1;
+    document.querySelectorAll('.panel').forEach((p) => {
+      if (p.hidden || p.closest('[hidden]')) return;
+      const r = p.getBoundingClientRect();
+      if (r.bottom < -120 || r.top > vh + 120) return;
+      const k = Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / vh));
+      p.style.setProperty('--py', (k * -6).toFixed(2) + 'px');
+      p.style.setProperty('--rx', (k * 2.4).toFixed(2) + 'deg');
+      p.style.setProperty('--ry', fine.matches ? ((px - 0.5) * 3.2).toFixed(2) + 'deg' : '0deg');
+    });
+  }
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+
+  addEventListener('scroll', kick, { passive: true });
+  addEventListener('resize', kick);
+  addEventListener('pointermove', (e) => { if (fine.matches) { px = e.clientX / (innerWidth || 1); kick(); } }, { passive: true });
+  document.addEventListener('visibilitychange', kick);
+
+  document.addEventListener('dad:render', (e) => {
+    const key = e.detail && e.detail.key;
+    if (lastKey !== null && key !== lastKey && signPanel && !reduce.matches) {
+      signPanel.classList.remove('ignite');
+      void signPanel.offsetWidth;
+      signPanel.classList.add('ignite');
+    }
+    lastKey = key;
+    kick();
+  });
+
+  kick();
 })();
 </script>
 </body>
