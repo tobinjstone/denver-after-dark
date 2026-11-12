@@ -1153,7 +1153,7 @@ button { font: inherit; }
     trail.style.opacity = 1;
     spark.style.opacity = 1;
     const frame = (now) => {
-      const t = Math.min(1, (now - t0) / dur);
+      const t = Math.max(0, Math.min(1, (now - t0) / dur));
       const L = cableLen * Math.pow(t, 1.5);
       const p = cable.getPointAtLength(L);
       spark.setAttribute('cx', p.x.toFixed(1));
