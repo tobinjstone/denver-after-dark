@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Front Desk · Denver After Dark</title>
+<meta name="theme-color" content="#121015">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f4a52'/%3E%3Cpath d='M20 44 V22 a12 12 0 0 1 24 0 V44' fill='none' stroke='%23f2b134' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Alfa+Slab+One&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Front desk: the motel office behind the sign. Same enamel palette, plain working forms. */
+:root {
+  color-scheme: dark;
+  --night: #121015; --ink: #f5ecd8; --muted: #bcb09c;
+  --teal: #1f8f86; --teal-deep: #0f4a52; --cream: #f2e5c4; --cream-dim: #cdbf9c;
+  --red: #d63a2f; --mustard: #f2b134; --navy: #19213a; --card: #1b181f; --edge: #3a3540;
+  --neon-yel: #ffcf47; --neon-yel-core: #fff7da; --green: #6dff9e;
+  --glow-yel: 0 0 1px #fff, 0 0 4px var(--neon-yel), 0 0 10px #ffb21c, 0 0 24px #e08600;
+  --f-script: "Yellowtail", "Brush Script MT", cursive;
+  --f-slab: "Alfa Slab One", "Rockwell", Georgia, serif;
+  --f-body: "Barlow", "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: radial-gradient(120% 60% at 50% 0%, #1f2a3a 0%, var(--night) 60%) fixed, var(--night); color: var(--ink); font: 16px/1.45 var(--f-body); }
+[hidden] { display: none !important; }
+a { color: var(--cream); }
+:focus-visible { outline: 2px solid var(--neon-yel); outline-offset: 2px; }
+.wrap { max-width: 640px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: max(20px, env(safe-area-inset-top, 0px)) 120px; display: grid; gap: 28px; }
+.desk { justify-self: center; margin: 8px 0 0; padding: 6px 26px 12px; background: linear-gradient(170deg, #2aa79c, var(--teal) 45%, #156f68); border: 4px solid var(--cream); border-radius: 40px 10px 40px 10px; box-shadow: 0 0 0 3px var(--red), 0 0 0 5px #1d1216, 0 12px 24px rgba(0,0,0,.45); transform: rotate(-3deg); font: 400 clamp(34px, 10vw, 46px)/1.05 var(--f-script); color: var(--neon-yel-core); text-shadow: var(--glow-yel); }
+h2 { margin: 0; font: 400 22px/1.1 var(--f-slab); letter-spacing: .02em; color: var(--cream); }
+.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.card { background: var(--card); border: 2px solid var(--edge); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.card.shared { border-color: var(--cream-dim); }
+.card .head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.swatch { width: 14px; height: 14px; border-radius: 50%; flex: none; box-shadow: 0 0 0 2px #1d1216; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid2 > * { min-width: 0; }
+@media (max-width: 420px) { .grid2.stack { grid-template-columns: 1fr; } }
+label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
+input, select, textarea { width: 100%; min-height: 46px; padding: 10px 12px; border-radius: 10px; border: 1.5px solid #4a4450; background: #0f0d12; color: var(--ink); font: 500 16px/1.25 var(--f-body); }
+textarea { min-height: 64px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--mustard); box-shadow: 0 0 0 3px rgba(242,177,52,.25); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 0; background: linear-gradient(180deg, #fff6df, var(--cream)); color: var(--navy); box-shadow: 0 0 0 2px #1d1216, 0 3px 0 #8d7f5f; font: 700 15px/1.1 var(--f-body); cursor: pointer; text-decoration: none; white-space: nowrap; }
+.btn:active { transform: translateY(2px); box-shadow: 0 0 0 2px #1d1216, 0 1px 0 #8d7f5f; }
+.btn.go { background: linear-gradient(180deg, #ffc451, var(--mustard)); }
+.btn.red { background: linear-gradient(180deg, #e64a3d, var(--red)); color: #fff6e2; box-shadow: 0 0 0 2px #1d1216, 0 3px 0 #5e140e; }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px #5a5360; }
+.btn.small { min-height: 40px; padding: 6px 11px; font-size: 14px; }
+.btn:disabled { opacity: .45; cursor: default; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { min-height: 40px; padding: 6px 14px; border-radius: 999px; border: 1.5px solid #5a5360; background: transparent; color: var(--ink); font: 600 14px/1 var(--f-body); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--cream); color: var(--navy); border-color: var(--cream); }
+.status { display: inline-flex; padding: 2px 10px; border-radius: 999px; font: 700 12px/1.6 var(--f-body); letter-spacing: .04em; text-transform: uppercase; }
+.status.here { background: var(--green); color: #0b2a17; }
+.status.next { background: var(--mustard); color: var(--navy); }
+.status.past { background: #4a4450; color: var(--ink); }
+.muted { color: var(--muted); font-size: 14px; margin: 0; }
+.err { color: #ff9b8f; font-size: 14px; margin: 0; }
+.lock { max-width: 420px; justify-self: center; width: 100%; }
+.msgs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.msgs li { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: #0f0d12; border: 1.5px solid var(--edge); }
+.msgs li.hid { opacity: .45; }
+.msgs .who { font-size: 13px; color: var(--muted); }
+.msgs .txt { grid-column: 1; overflow-wrap: anywhere; }
+.msgs .actions { grid-column: 2; grid-row: 1 / span 2; }
+.dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; padding: 12px max(16px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: rgba(18,16,21,.94); border-top: 2px solid var(--edge); backdrop-filter: blur(6px); }
+.dock .inner { max-width: 640px; margin: 0 auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.dock .note { flex: 1 1 160px; font-size: 14px; color: var(--muted); }
+.dock .note.dirty { color: var(--mustard); font-weight: 600; }
+.links { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 14px; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1 class="desk">Front Desk</h1>
+
+  <form class="card lock" id="lock" autocomplete="off">
+    <label for="pw">Password
+      <input id="pw" type="password" autocomplete="current-password" required>
+    </label>
+    <button class="btn go" id="unlock" type="submit">Unlock</button>
+    <p class="err" id="lock-err" role="alert" hidden></p>
+  </form>
+
+  <div id="app" hidden style="display:grid;gap:28px">
+    <section style="display:grid;gap:12px">
+      <div class="bar"><h2>Groups</h2><button class="btn small" id="add-group" type="button">Add group</button></div>
+      <p class="muted" id="groups-empty">No groups. Everyone sees one shared page.</p>
+      <div id="groups" style="display:grid;gap:12px"></div>
+    </section>
+
+    <section style="display:grid;gap:12px">
+      <div class="bar"><h2>Stops</h2><button class="btn small" id="add-stop" type="button">Add stop</button></div>
+      <div class="chips" id="filter" role="group" aria-label="Show stops for"></div>
+      <div id="stops" style="display:grid;gap:12px"></div>
+    </section>
+
+    <section style="display:grid;gap:12px">
+      <div class="bar"><h2>Chat</h2><button class="btn small ghost" id="refresh-chat" type="button">Refresh</button></div>
+      <ul class="msgs" id="msgs"></ul>
+      <p class="muted" id="msgs-empty">No messages yet.</p>
+    </section>
+
+    <section style="display:grid;gap:12px">
+      <h2>Hidden</h2>
+      <div class="grid2">
+        <input id="hide-input" placeholder="Message ID or name" aria-label="Message ID or name to hide">
+        <button class="btn small" id="hide-add" type="button">Hide</button>
+      </div>
+      <div class="chips" id="hidden-list"></div>
+    </section>
+
+    <div class="links"><a href="./" target="_blank" rel="noopener">Open the site</a><a href="https://docs.google.com/spreadsheets/d/1YTedVYSWeLrRCX_F3eUwHXh62TK4iZxq3XXNOzWIrLk/edit" target="_blank" rel="noopener">Backup sheet</a></div>
+  </div>
+</main>
+
+<div class="dock" id="dock" hidden>
+  <div class="inner">
+    <span class="note" id="dock-note">Loading…</span>
+    <button class="btn ghost small" id="discard" type="button">Discard</button>
+    <button class="btn go" id="publish" type="button">Publish</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const CONFIG = {
+    sheetId: '1YTedVYSWeLrRCX_F3eUwHXh62TK4iZxq3XXNOzWIrLk',
+    ntfy: 'https://ntfy.sh',
+    chatTopic: 'denver-after-dark-nov12-k7x9q',
+    adminTopic: 'denver-after-dark-nov12-k7x9q-admin',
+  };
+  const PUB = {"kty": "EC", "crv": "P-256", "x": "ttly2vmHDhNsRXQK4Qm98D5bLq5fw7H-SXoQ8dv8Gow", "y": "cZQFuLLGg7L0n4ewhDpa3rILqrmuyKoFpPcco1MG5us"};
+  const SEALED = {"salt": "pBR1wHaoXJtWFanqy7Mo/Q==", "iv": "FHArm0qtq5uvTgUi", "iter": 600000, "ct": "WOElEBwYOmSuag/WEKF7HQky4EGqFJVzfeoEIf49w524hGb06wXTWvGCvrclQquhwJQO90Ojulru9zLmeC+DOmogHywXr0RPIXTGrJbWwe2f1HprQ+fu4RLKUXWgMAA3FHL+fB08CtEAXG/Np71EdrAFDiuHLDopzQuGiD/YHmGeYbJ5eRlA1ihjkkO0Vi0gYqDkuKoLevD/QA=="};
+  const PALETTE = ['#d63a2f', '#1f8f86', '#f2b134', '#3b6fd4', '#e2673a', '#8a5cc6', '#3f9a52', '#d24f8a'];
+  const $ = (id) => document.getElementById(id);
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const b64 = (buf) => { let s = ''; new Uint8Array(buf).forEach((c) => { s += String.fromCharCode(c); }); return btoa(s); };
+  const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const slug = (v) => String(v || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+  let signKey = null, verifyKey = null;
+  let published = null;   // last published snapshot (string)
+  let state = { groups: [], stops: [], hide: [] };
+  let filter = 'all';
+  let lastTs = 0;
+
+  /* ---------- crypto ---------- */
+  async function unlock(pw) {
+    const base = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
+    const aes = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: unb64(SEALED.salt), iterations: SEALED.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+    const pkcs8 = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(SEALED.iv) }, aes, unb64(SEALED.ct));
+    return crypto.subtle.importKey('pkcs8', pkcs8, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
+  }
+  async function gz(str) {
+    if (!('CompressionStream' in window)) return [0, b64(enc.encode(str))];
+    const out = await new Response(new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();
+    return [1, b64(out)];
+  }
+  async function ungz(z, d) {
+    const bytes = unb64(d);
+    if (!z) return dec.decode(bytes);
+    return new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+  }
+
+  /* ---------- reading the current state ---------- */
+  async function latestPublished() {
+    const r = await fetch(CONFIG.ntfy + '/' + CONFIG.adminTopic + '/json?poll=1&since=all', { cache: 'no-store' });
+    if (!r.ok) throw new Error('ntfy ' + r.status);
+    const lines = (await r.text()).split('\n').filter(Boolean);
+    const sets = {};
+    lines.forEach((l) => {
+      try {
+        const m = JSON.parse(l); const c = JSON.parse(m.message);
+        if (c.k !== 'dad1') return;
+        const set = sets[c.ts] || (sets[c.ts] = { n: c.n, z: c.z, s: c.s, parts: [] });
+        set.parts[c.i] = c.d;
+      } catch (e) {}
+    });
+    const tss = Object.keys(sets).map(Number).sort((a, b) => b - a);
+    for (const ts of tss) {
+      const set = sets[ts];
+      if (set.parts.filter((x) => x != null).length !== set.n) continue;
+      const d = set.parts.join('');
+      const ok = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, verifyKey, unb64(set.s), enc.encode('dad1.' + ts + '.' + set.z + '.' + d));
+      if (!ok) continue;
+      return { ts, snap: JSON.parse(await ungz(set.z, d)) };
+    }
+    return null;
+  }
+
+  function parseGviz(text) {
+    const j = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
+    const cols = j.table.cols.map((c) => String(c.label || c.id || '').trim().toLowerCase());
+    return j.table.rows.map((r) => { const o = {}; cols.forEach((k, i) => { const c = r.c && r.c[i]; o[k] = c == null ? '' : String(c.f != null ? c.f : (c.v != null ? c.v : '')).trim(); }); return o; });
+  }
+  async function sheetTab(name) {
+    const r = await fetch('https://docs.google.com/spreadsheets/d/' + CONFIG.sheetId + '/gviz/tq?tqx=out:json&headers=1&sheet=' + encodeURIComponent(name), { cache: 'no-store' });
+    if (!r.ok) throw new Error('sheet ' + r.status);
+    return parseGviz(await r.text());
+  }
+  async function fromSheet() {
+    const [stops, hide, groups] = await Promise.all([sheetTab('Stops'), sheetTab('Hide').catch(() => []), sheetTab('Groups').catch(() => [])]);
+    return {
+      groups: groups.map((g) => ({ name: g.group || '', leader: g.leader || '', phone: g.phone || '', signal: g.signal || '', note: g.note || '' })).filter((g) => g.name),
+      stops: stops.map((s) => ({ time: s.time || '', venue: s.venue || '', address: s.address || '', area: s.area || '', note: s.note || '', status: (s.status || '').toLowerCase() === 'next' ? 'next' : '', group: s.group || '' })).filter((s) => s.venue || s.time),
+      hide: hide.map((r) => Object.values(r)[0]).filter(Boolean),
+    };
+  }
+
+  /* ---------- editing ---------- */
+  const snapshot = () => JSON.stringify({
+    groups: state.groups.map((g) => ({ name: g.name.trim(), leader: g.leader.trim(), phone: g.phone.trim(), signal: g.signal.trim(), note: g.note.trim() })).filter((g) => g.name),
+    stops: state.stops.map((s) => ({ time: s.time.trim(), venue: s.venue.trim(), address: s.address.trim(), area: s.area.trim(), note: s.note.trim(), status: s.status, group: s.group })).filter((s) => s.venue || s.time),
+    hide: state.hide.filter(Boolean),
+  });
+  function dirty() {
+    const d = published !== snapshot();
+    const n = $('dock-note');
+    n.classList.toggle('dirty', d);
+    n.textContent = d ? 'Unpublished changes' : (lastTs ? 'Live · published ' + new Date(lastTs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Denver' }) : 'Nothing published yet');
+    $('publish').disabled = !d; $('discard').disabled = !d;
+  }
+  const field = (labelText, value, onInput, opts = {}) => {
+    const l = document.createElement('label'); l.textContent = labelText;
+    const i = document.createElement(opts.area ? 'textarea' : 'input');
+    if (!opts.area) i.type = opts.type || 'text';
+    if (opts.placeholder) i.placeholder = opts.placeholder;
+    i.value = value || '';
+    i.addEventListener('input', () => { onInput(i.value); dirty(); });
+    l.append(i); return l;
+  };
+  const button = (text, cls, fn) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn small ' + (cls || ''); b.textContent = text; b.addEventListener('click', fn); return b; };
+  const groupColor = (name) => { const i = state.groups.findIndex((g) => slug(g.name) === slug(name)); return i < 0 ? '#8d8572' : PALETTE[i % PALETTE.length]; };
+  const nowTime = () => new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Denver' });
+
+  function renderGroups() {
+    const box = $('groups'); box.textContent = '';
+    $('groups-empty').hidden = state.groups.length > 0;
+    state.groups.forEach((g, gi) => {
+      const c = document.createElement('div'); c.className = 'card';
+      const head = document.createElement('div'); head.className = 'head';
+      const sw = document.createElement('span'); sw.className = 'swatch'; sw.style.background = PALETTE[gi % PALETTE.length];
+      const t = document.createElement('strong'); t.textContent = g.name || 'New group';
+      const link = document.createElement('span'); link.className = 'muted'; link.textContent = g.name ? '?g=' + slug(g.name) : '';
+      head.append(sw, t, link);
+      const row1 = document.createElement('div'); row1.className = 'grid2 stack';
+      row1.append(
+        field('Name', g.name, (v) => { const old = g.name; g.name = v; state.stops.forEach((s) => { if (old && slug(s.group) === slug(old)) s.group = v; }); t.textContent = v || 'New group'; link.textContent = v ? '?g=' + slug(v) : ''; renderFilter(); }),
+        field('Leader', g.leader, (v) => { g.leader = v; }));
+      const row2 = document.createElement('div'); row2.className = 'grid2 stack';
+      row2.append(field('Leader phone', g.phone, (v) => { g.phone = v; }, { type: 'tel' }), field('Signal link (optional)', g.signal, (v) => { g.signal = v; }, { type: 'url' }));
+      const acts = document.createElement('div'); acts.className = 'actions';
+      acts.append(button('Remove group', 'red', () => {
+        state.stops.forEach((s) => { if (slug(s.group) === slug(g.name)) s.group = ''; });
+        state.groups.splice(gi, 1); if (filter === slug(g.name)) filter = 'all'; renderAll(); dirty();
+      }));
+      c.append(head, row1, row2, field('Note for this group (optional)', g.note, (v) => { g.note = v; }), acts);
+      box.append(c);
+    });
+  }
+
+  function renderFilter() {
+    const box = $('filter'); box.textContent = '';
+    const opts = [['all', 'All stops']].concat(state.groups.filter((g) => g.name).map((g) => [slug(g.name), g.name])).concat(state.groups.length ? [['shared', 'Shared']] : []);
+    if (!opts.some(([k]) => k === filter)) filter = 'all';
+    opts.forEach(([k, n]) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = n;
+      b.setAttribute('aria-pressed', String(filter === k));
+      b.addEventListener('click', () => { filter = k; renderFilter(); renderStops(); });
+      box.append(b);
+    });
+  }
+
+  function statusOf(s, i) {
+    if (s.status === 'next') return 'next';
+    // "here" = the latest non-next stop for its group (or for everyone if shared)
+    const later = state.stops.slice(i + 1).some((o) => o.status !== 'next' && (!o.group || !s.group || slug(o.group) === slug(s.group)));
+    return later ? 'past' : 'here';
+  }
+
+  function renderStops() {
+    const box = $('stops'); box.textContent = '';
+    const shown = state.stops.map((s, i) => [s, i]).filter(([s]) => filter === 'all' || (filter === 'shared' ? !s.group : (slug(s.group) === filter || !s.group)));
+    if (!shown.length) { const p = document.createElement('p'); p.className = 'muted'; p.textContent = 'No stops yet.'; box.append(p); }
+    shown.forEach(([s, i]) => {
+      const c = document.createElement('div'); c.className = 'card' + (s.group ? '' : ' shared');
+      const head = document.createElement('div'); head.className = 'head';
+      const st = statusOf(s, i);
+      const badge = document.createElement('span'); badge.className = 'status ' + st; badge.textContent = st === 'here' ? 'Here now' : st === 'next' ? 'Next' : 'Earlier';
+      const sw = document.createElement('span'); sw.className = 'swatch'; sw.style.background = s.group ? groupColor(s.group) : 'transparent';
+      const who = document.createElement('span'); who.className = 'muted'; who.textContent = s.group || (state.groups.length ? 'All groups' : '');
+      head.append(badge, sw, who);
+      const row0 = document.createElement('div'); row0.className = 'grid2';
+      if (state.groups.length) {
+        const l = document.createElement('label'); l.textContent = 'Group';
+        const sel = document.createElement('select');
+        [['', 'All groups']].concat(state.groups.filter((g) => g.name).map((g) => [g.name, g.name])).forEach(([v, n]) => { const o = document.createElement('option'); o.value = v; o.textContent = n; if (slug(v) === slug(s.group)) o.selected = true; sel.append(o); });
+        sel.addEventListener('change', () => { s.group = sel.value; renderStops(); dirty(); });
+        l.append(sel); row0.append(l);
+      }
+      const ls = document.createElement('label'); ls.textContent = 'Status';
+      const ss = document.createElement('select');
+      [['', 'Here / been here'], ['next', 'Next (planned)']].forEach(([v, n]) => { const o = document.createElement('option'); o.value = v; o.textContent = n; if (v === s.status) o.selected = true; ss.append(o); });
+      ss.addEventListener('change', () => { s.status = ss.value; renderStops(); dirty(); });
+      ls.append(ss); row0.append(ls);
+      const row1 = document.createElement('div'); row1.className = 'grid2';
+      row1.append(field('Time', s.time, (v) => { s.time = v; }, { placeholder: '10:30 PM' }), field('Venue', s.venue, (v) => { s.venue = v; }, { placeholder: 'TBA' }));
+      const row2 = document.createElement('div'); row2.className = 'grid2';
+      row2.append(field('Address', s.address, (v) => { s.address = v; }, { placeholder: '1215 20th St' }), field('Area', s.area, (v) => { s.area = v; }, { placeholder: 'Ballpark' }));
+      const acts = document.createElement('div'); acts.className = 'actions';
+      if (s.status === 'next') acts.append(button('Arrived', 'go', () => { s.status = ''; s.time = nowTime(); state.stops.splice(i, 1); state.stops.push(s); renderStops(); dirty(); }));
+      acts.append(
+        button('↑', 'ghost', () => { if (i > 0) { [state.stops[i - 1], state.stops[i]] = [state.stops[i], state.stops[i - 1]]; renderStops(); dirty(); } }),
+        button('↓', 'ghost', () => { if (i < state.stops.length - 1) { [state.stops[i + 1], state.stops[i]] = [state.stops[i], state.stops[i + 1]]; renderStops(); dirty(); } }),
+        button('Delete', 'red', () => { state.stops.splice(i, 1); renderStops(); dirty(); }));
+      c.append(head, row0, row1, row2, field('Note', s.note, (v) => { s.note = v; }, { area: true, placeholder: 'Downstairs. We’re by the stage.' }), acts);
+      box.append(c);
+    });
+  }
+
+  function renderHidden() {
+    const box = $('hidden-list'); box.textContent = '';
+    state.hide.forEach((h, i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = h + '  ✕';
+      b.setAttribute('aria-label', 'Unhide ' + h);
+      b.addEventListener('click', () => { state.hide.splice(i, 1); renderHidden(); renderMsgs(); dirty(); });
+      box.append(b);
+    });
+  }
+  function hide(v) { v = String(v || '').trim(); if (!v || state.hide.some((h) => h.toLowerCase() === v.toLowerCase())) return; state.hide.push(v); renderHidden(); renderMsgs(); dirty(); }
+  $('hide-add').addEventListener('click', () => { hide($('hide-input').value); $('hide-input').value = ''; });
+
+  let chat = [];
+  async function loadChat() {
+    try {
+      const r = await fetch(CONFIG.ntfy + '/' + CONFIG.chatTopic + '/json?poll=1&since=all', { cache: 'no-store' });
+      chat = (await r.text()).split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (e) { return null; } }).filter((m) => m && m.event === 'message').sort((a, b) => b.time - a.time).slice(0, 80);
+    } catch (e) {}
+    renderMsgs();
+  }
+  function renderMsgs() {
+    const box = $('msgs'); box.textContent = '';
+    $('msgs-empty').hidden = chat.length > 0;
+    const hidden = state.hide.map((h) => h.toLowerCase());
+    chat.forEach((m) => {
+      const name = String(m.title || 'Someone');
+      const isHid = hidden.includes(String(m.id).toLowerCase()) || hidden.includes(name.toLowerCase());
+      const li = document.createElement('li'); if (isHid) li.className = 'hid';
+      const who = document.createElement('span'); who.className = 'who';
+      const g = ((m.tags || []).find((t) => /^g-/.test(t)) || '').slice(2);
+      who.textContent = name + ' · ' + new Date(m.time * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Denver' }) + (g ? ' · ' + g : '');
+      const txt = document.createElement('span'); txt.className = 'txt'; txt.textContent = m.message;
+      const acts = document.createElement('div'); acts.className = 'actions';
+      if (!isHid) acts.append(button('Hide', '', () => hide(m.id)), button('Hide name', 'ghost', () => hide(name)));
+      li.append(who, txt, acts); box.append(li);
+    });
+  }
+  $('refresh-chat').addEventListener('click', loadChat);
+
+  function renderAll() { renderGroups(); renderFilter(); renderStops(); renderHidden(); renderMsgs(); }
+
+  $('add-group').addEventListener('click', () => { state.groups.push({ name: 'Group ' + (state.groups.length + 1), leader: '', phone: '', signal: '', note: '' }); renderAll(); dirty(); });
+  $('add-stop').addEventListener('click', () => {
+    const g = filter !== 'all' && filter !== 'shared' ? (state.groups.find((x) => slug(x.name) === filter) || {}).name || '' : '';
+    state.stops.push({ time: '', venue: '', address: '', area: '', note: '', status: 'next', group: g });
+    renderStops(); dirty();
+    const cards = $('stops').querySelectorAll('.card'); if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  function load(snap) {
+    state = {
+      groups: (snap.groups || []).map((g) => ({ name: g.name || '', leader: g.leader || '', phone: g.phone || '', signal: g.signal || '', note: g.note || '' })),
+      stops: (snap.stops || []).map((s) => ({ time: s.time || '', venue: s.venue || '', address: s.address || '', area: s.area || '', note: s.note || '', status: s.status === 'next' ? 'next' : '', group: s.group || '' })),
+      hide: (snap.hide || []).slice(),
+    };
+    published = snapshot();
+    renderAll(); dirty();
+  }
+
+  $('discard').addEventListener('click', () => { load(JSON.parse(published)); });
+
+  $('publish').addEventListener('click', async () => {
+    const btn = $('publish'); btn.disabled = true; $('dock-note').textContent = 'Publishing…';
+    try {
+      const body = snapshot();
+      const ts = Date.now();
+      const [z, d] = await gz(body);
+      const sig = b64(await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, signKey, enc.encode('dad1.' + ts + '.' + z + '.' + d)));
+      const parts = d.match(/.{1,3000}/g) || [''];
+      for (let i = 0; i < parts.length; i++) {
+        const r = await fetch(CONFIG.ntfy + '/', { method: 'POST', body: JSON.stringify({ topic: CONFIG.adminTopic, message: JSON.stringify({ k: 'dad1', ts, i, n: parts.length, z, s: sig, d: parts[i] }) }) });
+        if (!r.ok) throw Object.assign(new Error('publish ' + r.status), { status: r.status });
+      }
+      published = body; lastTs = ts; dirty();
+    } catch (e) {
+      btn.disabled = false;
+      $('dock-note').classList.add('dirty');
+      $('dock-note').textContent = e.status === 429 ? 'Not published: this network hit its limit. Switch off Wi-Fi and try again.' : 'Not published. Check your connection and try again.';
+    }
+  });
+
+  window.addEventListener('beforeunload', (e) => { if (published !== null && published !== snapshot()) { e.preventDefault(); e.returnValue = ''; } });
+
+  $('lock').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const err = $('lock-err'); err.hidden = true;
+    $('unlock').disabled = true; $('unlock').textContent = 'Checking…';
+    try {
+      signKey = await unlock($('pw').value);
+    } catch (x) {
+      $('unlock').disabled = false; $('unlock').textContent = 'Unlock';
+      err.textContent = 'Wrong password.'; err.hidden = false; return;
+    }
+    $('pw').value = '';
+    $('lock').hidden = true; $('app').hidden = false; $('dock').hidden = false;
+    $('dock-note').textContent = 'Loading the live version…';
+    let snap = null;
+    try { const latest = await latestPublished(); if (latest) { snap = latest.snap; lastTs = latest.ts; } } catch (x) {}
+    if (!snap) { try { snap = await fromSheet(); } catch (x) { snap = { groups: [], stops: [], hide: [] }; } }
+    load(snap);
+    loadChat();
+  });
+
+  crypto.subtle.importKey('jwk', PUB, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']).then((k) => { verifyKey = k; });
+})();
+</script>
+</body>
+</html>

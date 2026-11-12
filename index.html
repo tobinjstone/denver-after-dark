@@ -886,7 +886,7 @@ button.fob:hover { transform: rotate(0deg) translateX(3px); }
       </div>
     </div>
     <p>Unofficial. Not affiliated with What’s Next. Thursday, Nov 12.</p>
-    <p id="host-tools" hidden><a href="https://docs.google.com/spreadsheets/d/1YTedVYSWeLrRCX_F3eUwHXh62TK4iZxq3XXNOzWIrLk/edit" target="_blank" rel="noopener">Edit the sheet</a></p>
+    <p id="host-tools" hidden><a href="admin.html">Front desk</a></p>
   </footer>
 
 </main>
@@ -903,6 +903,7 @@ button.fob:hover { transform: rotate(0deg) translateX(3px); }
     ntfy: 'https://ntfy.sh',
     chatTopic: 'denver-after-dark-nov12-k7x9q',
     pulseTopic: 'denver-after-dark-nov12-k7x9q-pulse',
+    adminTopic: 'denver-after-dark-nov12-k7x9q-admin',
     city: 'Denver, CO',
     pageSize: 40,
   };
@@ -973,6 +974,7 @@ button.fob:hover { transform: rotate(0deg) translateX(3px); }
   }
 
   async function load() {
+    if (adminLive) return; // the front desk has published; the Sheet is only a backup now
     let next = null;
     try {
       const [stops, hide, groups] = await Promise.all([sheetTab('Stops'), sheetTab('Hide').catch(() => []), sheetTab('Groups').catch(() => [])]);
@@ -990,7 +992,7 @@ button.fob:hover { transform: rotate(0deg) translateX(3px); }
         }
       } catch (e2) {}
     }
-    if (next) {
+    if (next && !adminLive) {
       data = next;
       lastSync = Date.now();
       store.set('data', data);
@@ -1309,6 +1311,42 @@ button.fob:hover { transform: rotate(0deg) translateX(3px); }
     }
   });
 
+  /* ---------------- signed updates from the front desk (admin.html) ---------------- */
+
+  const ADMIN_PUB = {"kty": "EC", "crv": "P-256", "x": "ttly2vmHDhNsRXQK4Qm98D5bLq5fw7H-SXoQ8dv8Gow", "y": "cZQFuLLGg7L0n4ewhDpa3rILqrmuyKoFpPcco1MG5us"};
+  let verifyKey = null;
+  let adminLive = false;
+  let adminTs = 0;
+  const adminSets = {};
+  const unb64 = (v) => Uint8Array.from(atob(v), (c) => c.charCodeAt(0));
+
+  async function onAdmin(m) {
+    let c; try { c = JSON.parse(m.message); } catch (e) { return; }
+    if (!c || c.k !== 'dad1' || !(c.ts > adminTs) || typeof c.d !== 'string' || !(c.n >= 1 && c.n <= 20) || !(c.i >= 0 && c.i < c.n)) return;
+    const set = adminSets[c.ts] || (adminSets[c.ts] = { n: c.n, z: c.z, s: c.s, parts: [] });
+    set.parts[c.i] = c.d;
+    if (set.parts.filter((x) => x != null).length !== set.n) return;
+    delete adminSets[c.ts];
+    try {
+      if (!verifyKey) verifyKey = await crypto.subtle.importKey('jwk', ADMIN_PUB, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+      const d = set.parts.join('');
+      const ok = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, verifyKey, unb64(set.s), new TextEncoder().encode('dad1.' + c.ts + '.' + set.z + '.' + d));
+      if (!ok || !(c.ts > adminTs)) return;
+      const bytes = unb64(d);
+      const text = set.z
+        ? await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text()
+        : new TextDecoder().decode(bytes);
+      const snap = JSON.parse(text);
+      adminTs = c.ts;
+      adminLive = true;
+      data = { stops: cleanStops(snap.stops || []), hide: (snap.hide || []).map(String), groups: cleanGroups(snap.groups || []) };
+      store.set('data', data);
+      lastSync = Date.now();
+      render();
+      renderFresh();
+    } catch (e) {}
+  }
+
   /* ---------------- chat + check-ins over ntfy ---------------- */
 
   const messages = new Map(); // id -> {id, time, name, text}
@@ -1318,6 +1356,7 @@ button.fob:hover { transform: rotate(0deg) translateX(3px); }
 
   function onEvent(m) {
     if (!m || m.event !== 'message') return;
+    if (m.topic === CONFIG.adminTopic) { onAdmin(m); return; }
     if (m.topic === CONFIG.pulseTopic) {
       try {
         const p = JSON.parse(m.message);
@@ -1404,8 +1443,11 @@ button.fob:hover { transform: rotate(0deg) translateX(3px); }
   let es = null;
   function connect() {
     if (es) { try { es.close(); } catch (e) {} }
-    es = new EventSource(CONFIG.ntfy + '/' + CONFIG.chatTopic + ',' + CONFIG.pulseTopic + '/sse?since=all');
+    es = new EventSource(CONFIG.ntfy + '/' + CONFIG.chatTopic + ',' + CONFIG.pulseTopic + ',' + CONFIG.adminTopic + '/sse?since=all');
     es.onmessage = (ev) => { try { onEvent(JSON.parse(ev.data)); } catch (e) {} };
+    const alive = () => { if (adminLive) { lastSync = Date.now(); renderFresh(); } };
+    es.addEventListener('open', alive);
+    es.addEventListener('keepalive', alive);
   }
 
   async function publish(topic, message, title, tags) {
@@ -1524,8 +1566,8 @@ button.fob:hover { transform: rotate(0deg) translateX(3px); }
     setInterval(() => { lastSync = Date.now(); renderFresh(); }, 5000);
   } else {
     render();
-    load();
     connect();
+    setTimeout(load, 1200); // give the front desk's latest update a moment to arrive first
     setInterval(() => { if (!document.hidden) load(); }, CONFIG.pollMs);
     setInterval(renderFresh, 5000);
     document.addEventListener('visibilitychange', () => {

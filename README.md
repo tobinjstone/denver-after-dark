@@ -6,6 +6,11 @@ Site: https://tobinjstone.github.io/denver-after-dark/
 
 ## Running the night
 
+**Front desk (admin):** `/admin.html`, password-protected. Edit groups, stops and hidden chat, then Publish.
+Updates are signed in the browser with a key only the password unlocks; the site verifies the signature
+before applying anything. Once the front desk has published, the Sheet below is only a backup.
+
+
 Everything is driven by the Google Sheet "Denver After Dark (live)" (sharing must be *Anyone with the link → Viewer*).
 
 - **Stops tab**: one row per stop. The lowest row not marked `next` is where we are now.
